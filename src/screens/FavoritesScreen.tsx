@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,64 +7,109 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useStore} from '../store/store';
-import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
-import {COLORS, SPACING} from '../theme/theme';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { COLORS, SPACING } from '../theme/theme';
 import HeaderBar from '../components/HeaderBar';
 import EmptyListAnimation from '../components/EmptyListAnimation';
 import FavoritesItemCard from '../components/FavoritesItemCard';
+import apiUrl from '../../apiConfig';
+import axios from 'axios';
 
-
-
-const FavoritesScreen = ({navigation}: any) => {
-  const FavoritesList = useStore((state: any) => state.FavoritesList);
+const FavoritesScreen = ({ navigation}: any) => {
+  const [favoritesList, setFavoritesList] = useState([]);
+  const [itemList, setItemList] = useState([]);
   const tabBarHeight = useBottomTabBarHeight();
-  const addToFavoriteList = useStore((state: any) => state.addToFavoriteList);
-  const deleteFromFavoriteList = useStore(
-    (state: any) => state.deleteFromFavoriteList,
-  );
-  const ToggleFavourite = (favourite: boolean, type: string, id: string) => {
-    favourite ? deleteFromFavoriteList(type, id) : addToFavoriteList(type, id);
+
+  const fetchFavorites = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const response = await fetch(`${apiUrl}/api/user-fav-items/${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch favorites');
+      }
+      const data = await response.json();
+      const itemIds = data.map(({itemId}:any) => itemId); // Extracting itemId from data
+      setItemList(itemIds); // Setting itemList to an array of itemIds
+      setFavoritesList(data);
+    } catch (error) {
+      console.error(error);
+      // Handle error here, e.g., show error message to user
+    }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchFavorites();
+    }, [])
+  );
+
+  const addToFavoriteList = async (id: string) => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      await axios.post(
+        `${apiUrl}/api/add-to-fav/${userId}/${id}`
+      );
+      fetchFavorites();
+    } catch (error) {
+      console.error('Failed to add to favorites', error);
+    }
+  };
+
+  const deleteFromFavoriteList = async (id: string) => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      await axios.post(
+        `${apiUrl}/api/remove-fav/${userId}/${id}`
+      );
+      fetchFavorites();
+    } catch (error) {
+      console.error('Failed to remove from favorites', error);
+      // Handle error here, e.g., show error message to user
+    }
+  };
+
+  const toggleFavourite = (id: string) => {
+  deleteFromFavoriteList(id)
+  };
+
   return (
-    <View style={styles.ScreenContainer}>
+    <View style={styles.screenContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.ScrollViewFlex}>
-        <View
-          style={[styles.ScrollViewInnerView, {marginBottom: tabBarHeight}]}>
-          <View style={styles.ItemContainer}>
+        contentContainerStyle={styles.scrollViewFlex}>
+        <View style={[styles.scrollViewInnerView, { marginBottom: tabBarHeight }]}>
+          <View style={styles.itemContainer}>
             <HeaderBar title="Favourites" />
 
-            {FavoritesList.length == 0 ? (
+            {favoritesList.length === 0 ? (
               <EmptyListAnimation title={'No Favourites'} />
             ) : (
-              <View style={styles.ListItemContainer}>
-                {FavoritesList.map((data: any) => (
+              <View style={styles.listItemContainer}>
+                {itemList.map(itemId => (
                   <TouchableOpacity
                     onPress={() => {
                       navigation.push('Details', {
-                        index: data.index,
-                        id: data.id,
-                        type: data.type,
+                        id: itemId
                       });
                     }}
-                    key={data.id}>
+                    key={itemId}>
                     <FavoritesItemCard
-                      id={data.id}
-                      imagelink_portrait={data.imagelink_portrait}
-                      name={data.name}
-                      special_ingredient={data.special_ingredient}
-                      type={data.type}
-                      ingredients={data.ingredients}
-                      average_rating={data.average_rating}
-                      ratings_count={data.ratings_count}
-                      roasted={data.roasted}
-                      description={data.description}
-                      favourite={data.favourite}
-                      ToggleFavouriteItem={ToggleFavourite}
+                      id={itemId}
+                      imagelink_portrait={itemId}
+                      name={itemId}
+                      special_ingredient={itemId}
+                      type={itemId}
+                      ingredients={itemId}
+                      average_rating={itemId}
+                      ratings_count={itemId}
+                      roasted={itemId}
+                      description={itemId}
+                      favourite={itemId}
+                      toggleFavouriteItem={() => toggleFavourite(itemId)}
                     />
                   </TouchableOpacity>
                 ))}
@@ -74,28 +119,28 @@ const FavoritesScreen = ({navigation}: any) => {
         </View>
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
-export default FavoritesScreen
+export default FavoritesScreen;
 
 const styles = StyleSheet.create({
-  ScreenContainer: {
+  screenContainer: {
     flex: 1,
     backgroundColor: COLORS.primaryBlackHex,
   },
-  ScrollViewFlex: {
+  scrollViewFlex: {
     flexGrow: 1,
   },
-  ScrollViewInnerView: {
+  scrollViewInnerView: {
     flex: 1,
     justifyContent: 'space-between',
   },
-  ItemContainer: {
+  itemContainer: {
     flex: 1,
   },
-  ListItemContainer: {
+  listItemContainer: {
     paddingHorizontal: SPACING.space_20,
     gap: SPACING.space_20,
   },
-})
+});

@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native'; // Import useNavigatio
 import { COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme';
 import GradientBGIconVector from './GradientBGIconVector';
 import ProfilePic from './ProfilePic';
+import { all } from 'axios';
 
 interface HeaderBarProps {
   title?: string;
@@ -16,9 +17,8 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
   const handleLogout = async () => {
     try {
       // Clear the token from AsyncStorage
-      await AsyncStorage.removeItem('token');
+      await AsyncStorage.multiRemove(['userId', 'token'])
 
-      // Navigate to the login screen (replace 'Login' with the actual name of your login screen)
       // navigation.navigate('Login')
       Alert.alert('Ini harusnya logout, tapi belum jadi')
     } catch (error) {

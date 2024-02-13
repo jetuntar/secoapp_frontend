@@ -7,23 +7,34 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 type LoginScreenProps = {
   navigation: AppState; // Change 'any' to the actual type of your navigation prop
   onAuthentication: (value: boolean) => void;
+  onAdmin: (value:boolean) => void;
 };
 
-const LoginScreen = ({ navigation, onAuthentication }: LoginScreenProps) => {
+const LoginScreen = ({ navigation, onAuthentication, onAdmin }: LoginScreenProps) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const handleLogin = async () => {
     try {
-      const response: AxiosResponse<{ token: string }> = await axios.post(
+      const response: AxiosResponse<{
+        role: string; token: string , userId: any
+      }> = await axios.post(
         `${apiUrl}/user/login`,
         { email, password }
       );
 
       if (response.data.token) {
         await AsyncStorage.setItem('token', response.data.token);
+        await AsyncStorage.setItem('userId', response.data.userId.toString());
+        if (response.data.role == 'admin') {
+          onAdmin(true)
+          console.log(response.data)
+        onAuthentication(true)
+        } else {
         console.log(response.data)
         onAuthentication(true)
+        onAdmin(false)
+        }
       } else {
         Alert.alert('Invalid email or password!!!', response.data.token, [{ text: 'OK', onPress: () => console.log('OK Pressed') }]);
       }

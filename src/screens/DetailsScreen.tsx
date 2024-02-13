@@ -19,10 +19,14 @@ import {
 import ImageBackgroundInfo from '../components/ImageBackgroundInfo';
 import PaymentFooter from '../components/PaymentFooter';
 import apiUrl from '../../apiConfig';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface CoffeeDetail {
-  desc: string;
+  price:number;
+  description: string;
   imagelink_portrait: any;
+  imagelink_square:any;
   type: string;
   id: string;
   favourite: boolean;
@@ -32,26 +36,37 @@ interface CoffeeDetail {
   average_rating: number;
   ratings_count: string;
   roasted: string;
-  // Add other properties as needed
+  index:number;
 }
 
 
 const DetailsScreen = ({navigation, route}: any) => {
+  
+  const { id } = route.params;
+  const [coffeeDetail, setCoffeeDetail] = useState<CoffeeDetail | null>(null);// Use 'any' for now
+
   const ItemOfIndex = useStore((state: any) =>
     route.params.type == 'Coffee' ? state.CoffeeList : state.BeanList,
   )[route.params.index];
-  const addToFavoriteList = useStore((state: any) => state.addToFavoriteList);
-  const deleteFromFavoriteList = useStore(
-    (state: any) => state.deleteFromFavoriteList,
-  );
   const addToCart = useStore((state: any) => state.addToCart);
-  const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
+  // const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
 
   // const [price, setPrice] = useState(ItemOfIndex.prices[0]);
   const [fullDesc, setFullDesc] = useState(false);
 
-  const ToggleFavourite = (favourite: boolean, type: string, id: string) => {
-    favourite ? deleteFromFavoriteList(type, id) : addToFavoriteList(type, id);
+  const toggleFavourite = async (
+    id: string
+  ) => {
+    try {
+      const userId = await AsyncStorage.getItem('userId'); // Retrieve userId from AsyncStorage
+      await axios.post(
+          `${apiUrl}/api/add-to-fav/${userId}/${id}`
+        ); // Make HTTP request to add to favorites
+      navigation.goBack();
+    } catch (error) {
+      console.error('ToggleFavourite error:', error);
+      // Handle error
+    }
   };
 
   const BackHandler = () => {
@@ -76,17 +91,14 @@ const DetailsScreen = ({navigation, route}: any) => {
       imagelink_square,
       special_ingredient,
       type,
-      prices: [{...price, quantity: 1}],
+      price: [{price, quantity: 1}],
     });
-    calculateCartPrice();
+    // calculateCartPrice();
     navigation.navigate('Cart');
   };
 
-  const { id } = route.params;
-  const [coffeeDetail, setCoffeeDetail] = useState<CoffeeDetail | null>(null);// Use 'any' for now
-
   useEffect(() => {
-    fetch(`${apiUrl}/api/coffeeItem/${id}`)
+    fetch(`${apiUrl}/api/coffee-item/${id}`)
       .then(response => response.json())
       .then(data => {
         setCoffeeDetail(data);
@@ -101,10 +113,11 @@ const DetailsScreen = ({navigation, route}: any) => {
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.ScrollViewFlex}>
+        contentContainerStyle={styles.ScrollViewFlex}
+      >
         <ImageBackgroundInfo
           EnableBackHandler={true}
-          imagelink_portrait={coffeeDetail?.imagelink_portrait}
+          imagelink_portrait={coffeeDetail ? coffeeDetail.imagelink_portrait : 'Image not found'}
           type={coffeeDetail ? coffeeDetail.type : ''}
           id={coffeeDetail ? coffeeDetail.id : ''}
           favourite={coffeeDetail ? coffeeDetail.favourite : false}
@@ -115,83 +128,30 @@ const DetailsScreen = ({navigation, route}: any) => {
           ratings_count={coffeeDetail ? coffeeDetail.ratings_count : ''}
           roasted={coffeeDetail ? coffeeDetail.roasted : ''}
           BackHandler={BackHandler}
-          ToggleFavourite={ToggleFavourite}
+          toggleFavourite={toggleFavourite}
         />
-
         <View style={styles.FooterInfoArea}>
           <Text style={styles.InfoTitle}>Description</Text>
-          {fullDesc ? (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                setFullDesc(prev => !prev);
-              }}>
-              <Text style={styles.DescriptionText}>
-                {coffeeDetail?.desc}
-              </Text>
-            </TouchableWithoutFeedback>
-          ) : (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                setFullDesc(prev => !prev);
-              }}>
-              <Text numberOfLines={3} style={styles.DescriptionText}>
-                {coffeeDetail?.desc}
-              </Text>
-            </TouchableWithoutFeedback>
-          )}
-          <Text style={styles.InfoTitle}>Size</Text>
-          {/* <View style={styles.SizeOuterContainer}>
-            {ItemOfIndex.prices.map((data: any) => (
-              <TouchableOpacity
-                key={data.size}
-                onPress={() => {
-                  setPrice(data);
-                }}
-                style={[
-                  styles.SizeBox,
-                  {
-                    borderColor:
-                      data.size == price.size
-                        ? COLORS.primaryOrangeHex
-                        : COLORS.primaryDarkGreyHex,
-                  },
-                ]}>
-                <Text
-                  style={[
-                    styles.SizeText,
-                    {
-                      fontSize:
-                        ItemOfIndex.type == 'Bean'
-                          ? FONTSIZE.size_14
-                          : FONTSIZE.size_16,
-                      color:
-                        data.size == price.size
-                          ? COLORS.primaryOrangeHex
-                          : COLORS.secondaryLightGreyHex,
-                    },
-                  ]}>
-                  {data.size}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View> */}
+          <Text style={styles.DescriptionText}>
+            {coffeeDetail?.description}
+          </Text>
         </View>
-        {/* <PaymentFooter
-          price={price}
+        <PaymentFooter
+          price={coffeeDetail?.price}
           buttonTitle="Add to Cart"
           buttonPressHandler={() => {
             addToCarthandler({
-              id: ItemOfIndex.id,
-              index: ItemOfIndex.index,
-              name: ItemOfIndex.name,
-              roasted: ItemOfIndex.roasted,
-              imagelink_square: ItemOfIndex.imagelink_square,
-              special_ingredient: ItemOfIndex.special_ingredient,
-              type: ItemOfIndex.type,
-              price: price,
+              id: coffeeDetail?.id,
+              index: coffeeDetail?.index,
+              name: coffeeDetail?.name,
+              roasted: coffeeDetail?.roasted,
+              imagelink_square: coffeeDetail?.imagelink_square,
+              special_ingredient: coffeeDetail?.special_ingredient,
+              type: coffeeDetail?.type,
+              price: coffeeDetail?.price,
             });
           }}
-        /> */}
+        />
       </ScrollView>
     </View>
   );

@@ -8,13 +8,9 @@ import {
   SPACING,
 } from '../theme/theme';
 
-interface PriceProps {
-  price: string;
-  currency: string;
-}
 
 interface PaymentFooterProps {
-  price: PriceProps;
+  price: any;
   buttonPressHandler: any;
   buttonTitle: string;
 }
@@ -29,7 +25,7 @@ const PaymentFooter: React.FC<PaymentFooterProps> = ({
       <View style={styles.PriceContainer}>
         <Text style={styles.PriceTitle}>Price</Text>
         <Text style={styles.PriceText}>
-          {price.currency} <Text style={styles.Price}>{price.price}</Text>
+        $ <Text style={styles.Price}>{price}</Text>
         </Text>
       </View>
       <TouchableOpacity

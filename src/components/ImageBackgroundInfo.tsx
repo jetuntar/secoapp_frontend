@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  ImageProps,
   TouchableOpacity,
   ImageBackground,
 } from 'react-native';
@@ -30,7 +29,7 @@ interface ImageBackgroundInfoProps {
   ratings_count: string;
   roasted: string;
   BackHandler?: any;
-  ToggleFavourite: any;
+  toggleFavourite: any;
 }
 
 const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
@@ -46,7 +45,7 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
   ratings_count,
   roasted,
   BackHandler,
-  ToggleFavourite,
+  toggleFavourite,
 }) => {
   return (
     <View>
@@ -67,7 +66,7 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                ToggleFavourite(favourite, type, id);
+                toggleFavourite(id)
               }}>
               <GradientBGIcon
                 name="like"
@@ -82,7 +81,7 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
           <View style={styles.ImageHeaderBarContainerWithoutBack}>
             <TouchableOpacity
               onPress={() => {
-                ToggleFavourite(favourite, type, id);
+                toggleFavourite(id)
               }}>
               <GradientBGIcon
                 name="like"

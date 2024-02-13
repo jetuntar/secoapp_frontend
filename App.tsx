@@ -9,6 +9,7 @@ import apiUrl from './apiConfig';
 import TabNavigator from './src/navigators/TabNavigator';
 import DetailsScreen from './src/screens/DetailsScreen';
 import PaymentScreen from './src/screens/PaymentScreen';
+import AdminScreen from './src/screens/AdminScreen';
 import LoginScreen from './src/screens/auth/LoginScreen'; // Import your LoginScreen component
 import RegisterScreen from './src/screens/auth/RegisterScreen'; // Import your RegisterScreen component
 
@@ -16,6 +17,7 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -49,14 +51,29 @@ const App = () => {
     setIsAuthenticated(value);
   };
 
+  const handleAdmin = (value:any) => {
+    setIsAdmin(value);
+  }
+  
+
   if (!isAuthenticated) {
     return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login">
-            {(props) => <LoginScreen {...props} onAuthentication={handleAuthentication} />}
+            {(props) => <LoginScreen {...props} onAuthentication={handleAuthentication} onAdmin={handleAdmin}/>}
           </Stack.Screen>
           <Stack.Screen name="Register" component={RegisterScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+
+  if (isAdmin) {
+    return(
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name='Admin' component={AdminScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     );
