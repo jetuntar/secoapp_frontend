@@ -26,12 +26,6 @@ const HeaderBar = () => {
 
   return (
     <View style={styles.HeaderContainer}>
-      {/* <GradientBGIconVector
-        onPress={handleLogout}
-        nameVector="logout"
-        colorVector={COLORS.primaryLightGreyHex}
-        sizeVector={FONTSIZE.size_16}
-      /> */}
       <TouchableOpacity 
       style={styles.AddressBox}
       
@@ -49,7 +43,12 @@ const HeaderBar = () => {
             <Text style={styles.AddressText}>Kost Standing</Text>
           </View>
         </TouchableOpacity>
-      <ProfilePic />
+      <GradientBGIconVector
+        onPress={handleLogout}
+        nameVector="logout"
+        colorVector={COLORS.primaryLightGreyHex}
+        sizeVector={FONTSIZE.size_16}
+      />
     </View>
   );
 };
