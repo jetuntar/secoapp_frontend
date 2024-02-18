@@ -45,18 +45,16 @@ const DetailsScreen = ({navigation, route}: any) => {
   const { id } = route.params;
   const [coffeeDetail, setCoffeeDetail] = useState<CoffeeDetail | null>(null);// Use 'any' for now
 
-  const ItemOfIndex = useStore((state: any) =>
-    route.params.type == 'Coffee' ? state.CoffeeList : state.BeanList,
-  )[route.params.index];
-  const addToCart = useStore((state: any) => state.addToCart);
+  // const ItemOfIndex = useStore((state: any) =>
+  //   route.params.type == 'Coffee' ? state.CoffeeList : state.BeanList,
+  // )[route.params.index];
+  // const addToCart = useStore((state: any) => state.addToCart);
   // const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
 
   // const [price, setPrice] = useState(ItemOfIndex.prices[0]);
-  const [fullDesc, setFullDesc] = useState(false);
+  // const [fullDesc, setFullDesc] = useState(false);
 
-  const toggleFavourite = async (
-    id: string
-  ) => {
+  const toggleFavourite = async (id: string) => {
     try {
       const userId = await AsyncStorage.getItem('userId'); // Retrieve userId from AsyncStorage
       await axios.post(
@@ -73,28 +71,25 @@ const DetailsScreen = ({navigation, route}: any) => {
     navigation.pop();
   };
 
+  const addToCart = async (
+    id: string
+    ) => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      await axios.put(
+        `${apiUrl}/api/increment-item-cart/${userId}/${id}`
+      );
+    } catch (error) {
+      console.error('Failed to remove from favorites', error);
+    }
+  }
+
   const addToCarthandler = ({
     id,
-    index,
-    name,
-    roasted,
-    imagelink_square,
-    special_ingredient,
-    type,
-    price,
   }: any) => {
-    addToCart({
-      id,
-      index,
-      name,
-      roasted,
-      imagelink_square,
-      special_ingredient,
-      type,
-      price: [{price, quantity: 1}],
-    });
+    addToCart(id);
     // calculateCartPrice();
-    navigation.navigate('Cart');
+    navigation.goBack();
   };
 
   useEffect(() => {
@@ -141,14 +136,7 @@ const DetailsScreen = ({navigation, route}: any) => {
           buttonTitle="Add to Cart"
           buttonPressHandler={() => {
             addToCarthandler({
-              id: coffeeDetail?.id,
-              index: coffeeDetail?.index,
-              name: coffeeDetail?.name,
-              roasted: coffeeDetail?.roasted,
-              imagelink_square: coffeeDetail?.imagelink_square,
-              special_ingredient: coffeeDetail?.special_ingredient,
-              type: coffeeDetail?.type,
-              price: coffeeDetail?.price,
+              id: coffeeDetail?.id
             });
           }}
         />

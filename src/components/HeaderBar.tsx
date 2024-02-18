@@ -1,17 +1,14 @@
 import React from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation from @react-navigation/native
-import { COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme';
+import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme';
 import GradientBGIconVector from './GradientBGIconVector';
 import ProfilePic from './ProfilePic';
-import { all } from 'axios';
+import CustomIcon from './CustomIcon';
 
-interface HeaderBarProps {
-  title?: string;
-}
 
-const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
+const HeaderBar = () => {
   const navigation = useNavigation(); // Use useNavigation hook to get the navigation object
 
   const handleLogout = async () => {
@@ -29,13 +26,29 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
 
   return (
     <View style={styles.HeaderContainer}>
-      <GradientBGIconVector
+      {/* <GradientBGIconVector
         onPress={handleLogout}
         nameVector="logout"
         colorVector={COLORS.primaryLightGreyHex}
         sizeVector={FONTSIZE.size_16}
-      />
-      <Text style={styles.HeaderText}>{title}</Text>
+      /> */}
+      <TouchableOpacity 
+      style={styles.AddressBox}
+      
+      >
+          <View>
+            <CustomIcon
+                    style={styles.InputIcon}
+                    name="location"
+                    size={FONTSIZE.size_30}
+                    color={COLORS.primaryLightGreyHex}
+                  />
+            </View>
+          <View style={styles.innerAddressBox}>
+            <Text style={styles.AddressTitle}>Deliver To</Text>
+            <Text style={styles.AddressText}>Kost Standing</Text>
+          </View>
+        </TouchableOpacity>
       <ProfilePic />
     </View>
   );
@@ -55,5 +68,30 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.poppins_semibold,
     fontSize: FONTSIZE.size_20,
     color: COLORS.primaryWhiteHex,
+  },
+
+  AddressBox: {
+    alignItems: 'center',
+    flexDirection:'row',
+    height: 60,
+    width:200,
+    borderRadius: BORDERRADIUS.radius_20,
+    backgroundColor: COLORS.primaryDarkGreyHex,
+  },
+  AddressTitle: {
+    fontFamily: FONTFAMILY.poppins_medium,
+    fontSize: FONTSIZE.size_14,
+    color: COLORS.primaryWhiteHex,
+  },
+  AddressText:{
+    fontFamily: FONTFAMILY.poppins_medium,
+    fontSize: FONTSIZE.size_16,
+    color: COLORS.primaryWhiteHex,
+  },
+  innerAddressBox:{
+    marginTop:5
+  },
+  InputIcon: {
+    marginHorizontal: SPACING.space_20,
   },
 });

@@ -10,6 +10,7 @@ import TabNavigator from './src/navigators/TabNavigator';
 import DetailsScreen from './src/screens/DetailsScreen';
 import PaymentScreen from './src/screens/PaymentScreen';
 import AdminScreen from './src/screens/AdminScreen';
+import AddressScreen from './src/screens/AddressScreen';
 import LoginScreen from './src/screens/auth/LoginScreen'; // Import your LoginScreen component
 import RegisterScreen from './src/screens/auth/RegisterScreen'; // Import your RegisterScreen component
 
@@ -86,6 +87,11 @@ const App = () => {
         <Stack.Screen
           name="Tab"
           component={TabNavigator}
+          options={{ animation: 'slide_from_bottom' }}
+        />
+        <Stack.Screen
+          name="Address"
+          component={AddressScreen}
           options={{ animation: 'slide_from_bottom' }}
         />
         <Stack.Screen

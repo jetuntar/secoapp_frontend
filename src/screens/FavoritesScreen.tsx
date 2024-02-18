@@ -45,18 +45,6 @@ const FavoritesScreen = ({ navigation}: any) => {
     }, [])
   );
 
-  const addToFavoriteList = async (id: string) => {
-    try {
-      const userId = await AsyncStorage.getItem('userId');
-      await axios.post(
-        `${apiUrl}/api/add-to-fav/${userId}/${id}`
-      );
-      fetchFavorites();
-    } catch (error) {
-      console.error('Failed to add to favorites', error);
-    }
-  };
-
   const deleteFromFavoriteList = async (id: string) => {
     try {
       const userId = await AsyncStorage.getItem('userId');
@@ -83,7 +71,7 @@ const FavoritesScreen = ({ navigation}: any) => {
         contentContainerStyle={styles.scrollViewFlex}>
         <View style={[styles.scrollViewInnerView, { marginBottom: tabBarHeight }]}>
           <View style={styles.itemContainer}>
-            <HeaderBar title="Favourites" />
+            <HeaderBar/>
 
             {favoritesList.length === 0 ? (
               <EmptyListAnimation title={'No Favourites'} />

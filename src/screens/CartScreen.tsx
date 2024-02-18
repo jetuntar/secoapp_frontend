@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -6,40 +6,190 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Linking
 } from 'react-native';
-import {useStore} from '../store/store';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
-import {COLORS, SPACING} from '../theme/theme';
+import {COLORS, FONTFAMILY, FONTSIZE, SPACING} from '../theme/theme';
 import HeaderBar from '../components/HeaderBar';
 import EmptyListAnimation from '../components/EmptyListAnimation';
 import PaymentFooter from '../components/PaymentFooter';
 import CartItem from '../components/CartItem';
+import apiUrl from '../../apiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { Link, useFocusEffect } from '@react-navigation/native';
+import { encode } from 'base-64';
+import App from '../../App';
 
-const CartScreen = ({navigation, route}:any) => {
-  const CartList = useStore((state: any) => state.CartList);
-  const CartPrice = useStore((state: any) => state.CartPrice);
-  const incrementCartItemQuantity = useStore(
-    (state: any) => state.incrementCartItemQuantity,
-  );
-  const decrementCartItemQuantity = useStore(
-    (state: any) => state.decrementCartItemQuantity,
-  );
-  const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
+const CartScreen = ({navigation}:any) => {
   const tabBarHeight = useBottomTabBarHeight();
+  const [cartList, setCartList] = useState<any[]>([])
+  const [itemList, setItemList] = useState<any[]>([])
+  const [cartPrice, setCartPrice] = useState<any>([])
+  const [itemDetails, setItemDetails] = useState<any>([])
 
-  const buttonPressHandler = () => {
-    navigation.push('Payment', {amount: CartPrice});
+  const getUserCartItem = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const response = await fetch(`${apiUrl}/api/user-cart-items/${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch carts');
+      }
+      const data = await response.json();
+      setCartList(data);
+      const itemIds = data.map(({ itemId, quantity }: any) => {
+        return { itemId, quantity };
+      });
+      setItemList(itemIds);
+      return { data, itemIds };
+    } catch (error) {
+      console.error(error);
+      // Handle error here, e.g., show error message to user
+      throw error;
+    }
   };
 
-  const incrementCartItemQuantityHandler = (id: string, size: string) => {
-    incrementCartItemQuantity(id, size);
-    calculateCartPrice();
+  interface CartItem {
+    itemId: string;
+    quantity: number;
+  }
+  
+  const getItemDetails = async (data: CartItem[]) => {
+    try {
+      const itemDetails = await Promise.all(
+        data.map(async ({ itemId }: any) => {
+          const priceResponse = await fetch(`${apiUrl}/api/coffee-item/${itemId}`);
+          if (!priceResponse.ok) {
+            throw new Error('Failed to fetch item price');
+          }
+          const itemData = await priceResponse.json();
+          return itemData;
+        })
+      );
+      return itemDetails;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+  
+  const calculateTotalPrice = (itemDetails: any[], cartList: CartItem[]) => {
+    try {
+      const totalPriceCart = itemDetails.reduce((acc, item, index) => {
+        const totalPriceItem = item.price * cartList[index].quantity;
+        return acc + totalPriceItem;
+      }, 0);
+      return totalPriceCart;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  const decrementCartItemQuantityHandler = (id: string, size: string) => {
-    decrementCartItemQuantity(id, size);
-    calculateCartPrice();
+  
+  const fetchCart = async () => {
+    try {
+      const { data } = await getUserCartItem();
+      const itemDetails = await getItemDetails(data);
+      setItemDetails(itemDetails);
+      const totalPriceCart = calculateTotalPrice(itemDetails, data);
+      setCartPrice(totalPriceCart);
+    } catch (error) {
+      console.error(error);
+      // Handle error here, e.g., show error message to user
+    }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchCart();
+    }, [])
+  );
+
+  const incrementItem = async (id: string) => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      await axios.put(
+        `${apiUrl}/api/increment-item-cart/${userId}/${id}`
+      );
+      fetchCart();
+    } catch (error) {
+      console.error('Failed to remove from favorites', error);
+    }
+  }
+
+  const decrementItem = async (id: string) => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      await axios.put(
+        `${apiUrl}/api/decrement-item-cart/${userId}/${id}`
+      );
+      fetchCart();
+    } catch (error) {
+      console.error('Failed to remove from favorites', error);
+    }
+  }
+
+  const incrementCartItemQuantityHandler = (id: string) => {
+    incrementItem(id);
+  };
+
+  const decrementCartItemQuantityHandler = (id: string) => {
+    decrementItem(id);
+  };
+
+  let currentDate = new Date();
+  let formattedDate = currentDate.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/[/\s/:]/g, '-');
+
+
+  const checkoutHandler = async () => {
+    const secret = 'SB-Mid-server-NxDJMYT-daettKH3d_-1ky5r'
+    const encodedSecret = encode(secret)
+    const basicAuth = `Basic ${encodedSecret}`
+    const checkoutUrl = 'https://api.sandbox.midtrans.com'
+
+    let paydata = {
+      item_details: itemDetails.map((item: { id: any; name: any; price: any; }, index: number) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: cartList[index]?.quantity || 0
+      })),
+      transaction_details: {
+        order_id: `ORDER-${formattedDate}`, // Add 'ORDER-' prefix to formattedDate
+        gross_amount: cartPrice
+      }
+    };
+
+    try {
+        const response = await fetch(`${checkoutUrl}/v1/payment-links`, {
+          method: "POST",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": basicAuth
+          },
+          body: JSON.stringify(paydata)
+        })
+
+        const paymentLink = await response.json()
+        let payment_url = paymentLink.payment_url
+        // console.log(payment_url)
+        Linking.openURL(payment_url)
+        .then((supported) => {
+          if (!supported) {
+            console.log("Can't handle payment url: "+ payment_url);
+          } else {
+            return Linking.openURL(payment_url)
+          }
+        })
+        .catch((err) => console.error('An error occurred', err));
+    } catch (error) {
+        // Handle error
+        console.error("Error during checkout:", error);
+    }
+  }
+
 
   return (
     <View style={styles.ScreenContainer}>
@@ -51,30 +201,31 @@ const CartScreen = ({navigation, route}:any) => {
         <View
           style={[styles.ScrollViewInnerView, {marginBottom: tabBarHeight}]}>
           <View style={styles.ItemContainer}>
-            <HeaderBar title="Cart" />
+            <HeaderBar />
 
-            {CartList.length == 0 ? (
+            
+
+            {cartList.length == 0 ? (
               <EmptyListAnimation title={'Cart is Empty'} />
             ) : (
               <View style={styles.ListItemContainer}>
-                {CartList.map((data: any) => (
+                {itemList.map(({itemId, quantity}: any) => (
                   <TouchableOpacity
                     onPress={() => {
                       navigation.push('Details', {
-                        index: data.index,
-                        id: data.id,
-                        type: data.type,
+                        id: itemId,
                       });
                     }}
-                    key={data.id}>
+                    key={itemId}>
                     <CartItem
-                      id={data.id}
-                      name={data.name}
-                      imagelink_square={data.imagelink_square}
-                      special_ingredient={data.special_ingredient}
-                      roasted={data.roasted}
-                      prices={data.prices}
-                      type={data.type}
+                      id={itemId}
+                      quantity={quantity}
+                      name={itemId.name}
+                      imagelink_square={itemId.imagelink_square}
+                      special_ingredient={itemId.special_ingredient}
+                      roasted={itemId.roasted}
+                      price={itemId.price}
+                      type={itemId.type}
                       incrementCartItemQuantityHandler={
                         incrementCartItemQuantityHandler
                       }
@@ -88,11 +239,11 @@ const CartScreen = ({navigation, route}:any) => {
             )}
           </View>
 
-          {CartList.length != 0 ? (
+          {cartList.length != 0 ? (
             <PaymentFooter
-              buttonPressHandler={buttonPressHandler}
+              buttonPressHandler={checkoutHandler}
               buttonTitle="Pay"
-              price={{price: CartPrice, currency: '$'}}
+              price={cartPrice}
             />
           ) : (
             <></>
@@ -121,7 +272,7 @@ ItemContainer: {
 ListItemContainer: {
   paddingHorizontal: SPACING.space_20,
   gap: SPACING.space_20,
-},
+}
 });
 
 export default CartScreen

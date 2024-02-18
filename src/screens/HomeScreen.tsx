@@ -25,6 +25,7 @@ import {FlatList} from 'react-native';
 import CoffeeCard from '../components/CoffeeCard';
 import {Dimensions} from 'react-native';
 import apiUrl from '../../apiConfig';
+import { Icon } from 'react-native-vector-icons/Icon';
 
 const getCategoriesFromData = (data: any) => {
   let temp: any = {};
@@ -155,10 +156,6 @@ const HomeScreen = ({navigation}: any) => {
         {/* App Header */}
         <HeaderBar />
 
-        <Text style={styles.ScreenTitle}>
-          Find the best{'\n'}coffee for you
-        </Text>
-
         {/* Search Input */}
 
         <View style={styles.InputContainerComponent}>
@@ -225,7 +222,7 @@ const HomeScreen = ({navigation}: any) => {
                   id: item.id,
                   // type: item.type,
                 },
-                console.log(item.index)
+                // console.log(item.index)
                 );
               }
               }>
@@ -266,7 +263,8 @@ const styles = StyleSheet.create({
   },
   InputContainerComponent: {
     flexDirection: 'row',
-    margin: SPACING.space_30,
+    marginLeft: SPACING.space_30,
+    marginRight: SPACING.space_30,
     borderRadius: BORDERRADIUS.radius_20,
     backgroundColor: COLORS.primaryDarkGreyHex,
     alignItems: 'center',
@@ -281,27 +279,11 @@ const styles = StyleSheet.create({
     fontSize: FONTSIZE.size_14,
     color: COLORS.primaryWhiteHex,
   },
-  CategoryScrollViewStyle: {
-    paddingHorizontal: SPACING.space_20,
-    marginBottom: SPACING.space_20,
-  },
-  CategoryScrollViewContainer: {
-    paddingHorizontal: SPACING.space_15,
-  },
-  CategoryScrollViewItem: {
-    alignItems: 'center',
-  },
   CategoryText: {
     fontFamily: FONTFAMILY.poppins_semibold,
     fontSize: FONTSIZE.size_16,
     color: COLORS.primaryLightGreyHex,
     marginBottom: SPACING.space_4,
-  },
-  ActiveCategory: {
-    height: SPACING.space_10,
-    width: SPACING.space_10,
-    borderRadius: BORDERRADIUS.radius_10,
-    backgroundColor: COLORS.primaryOrangeHex,
   },
   FlatListContainer: {
     gap: SPACING.space_20,
