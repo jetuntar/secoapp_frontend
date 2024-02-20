@@ -9,7 +9,7 @@ import {
   Linking
 } from 'react-native';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
-import {COLORS, FONTFAMILY, FONTSIZE, SPACING} from '../theme/theme';
+import {BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING} from '../theme/theme';
 import HeaderBar from '../components/HeaderBar';
 import EmptyListAnimation from '../components/EmptyListAnimation';
 import PaymentFooter from '../components/PaymentFooter';
@@ -20,13 +20,30 @@ import axios from 'axios';
 import { Link, useFocusEffect } from '@react-navigation/native';
 import { encode } from 'base-64';
 import App from '../../App';
+import CustomIcon from '../components/CustomIcon';
+
+interface Address {
+  address: string;
+  id: number;
+  phone: string;
+  recipient: string;
+  userId: number;
+}
+
+interface CartItem {
+  itemId: string;
+  quantity: number;
+}
 
 const CartScreen = ({navigation}:any) => {
   const tabBarHeight = useBottomTabBarHeight();
   const [cartList, setCartList] = useState<any[]>([])
   const [itemList, setItemList] = useState<any[]>([])
-  const [cartPrice, setCartPrice] = useState<any>([])
+  const [cartPrice, setCartPrice] = useState<CartItem[]>([])
   const [itemDetails, setItemDetails] = useState<any>([])
+  const [addressUser, setAddressUser] = useState<Address[]>([])
+
+  
 
   const getUserCartItem = async () => {
     try {
@@ -37,23 +54,17 @@ const CartScreen = ({navigation}:any) => {
       }
       const data = await response.json();
       setCartList(data);
-      const itemIds = data.map(({ itemId, quantity }: any) => {
-        return { itemId, quantity };
+      const itemIds = data.map(({ itemId, quantity}: any) => {
+        return { itemId, quantity};
       });
       setItemList(itemIds);
       return { data, itemIds };
     } catch (error) {
       console.error(error);
-      // Handle error here, e.g., show error message to user
       throw error;
     }
   };
 
-  interface CartItem {
-    itemId: string;
-    quantity: number;
-  }
-  
   const getItemDetails = async (data: CartItem[]) => {
     try {
       const itemDetails = await Promise.all(
@@ -79,12 +90,27 @@ const CartScreen = ({navigation}:any) => {
         const totalPriceItem = item.price * cartList[index].quantity;
         return acc + totalPriceItem;
       }, 0);
-      return totalPriceCart;
+      return totalPriceCart + 5000;
     } catch (error) {
       console.error(error);
       throw error;
     }
   };
+
+  const getUserAddress = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const response = await fetch(`${apiUrl}/api/get-address/${userId}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch carts');
+      }
+      const data = await response.json();
+      setAddressUser(data);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 
   
   const fetchCart = async () => {
@@ -94,6 +120,8 @@ const CartScreen = ({navigation}:any) => {
       setItemDetails(itemDetails);
       const totalPriceCart = calculateTotalPrice(itemDetails, data);
       setCartPrice(totalPriceCart);
+      getUserAddress();
+      // console.log(addressUser);
     } catch (error) {
       console.error(error);
       // Handle error here, e.g., show error message to user
@@ -143,6 +171,8 @@ const CartScreen = ({navigation}:any) => {
 
 
   const checkoutHandler = async () => {
+    fetchCart();
+    const userId = await AsyncStorage.getItem('userId');
     const secret = 'SB-Mid-server-NxDJMYT-daettKH3d_-1ky5r'
     const encodedSecret = encode(secret)
     const basicAuth = `Basic ${encodedSecret}`
@@ -156,10 +186,32 @@ const CartScreen = ({navigation}:any) => {
         quantity: cartList[index]?.quantity || 0
       })),
       transaction_details: {
-        order_id: `ORDER-${formattedDate}`, // Add 'ORDER-' prefix to formattedDate
+        order_id: `ORDER-${formattedDate}`,
         gross_amount: cartPrice
       }
     };
+
+    let orderdata = {
+      item_details: itemDetails.map((item: { id: any;}, index: number) => ({
+        itemId: item.id,
+        quantity: cartList[index]?.quantity || 0
+      })),
+      address_details: addressUser.map((item: {id: any},) => ({
+        addressId: item.id,
+      })),
+      order_details: {
+        order_date: `${formattedDate}`
+      }
+    }
+
+    try {
+      const response = await axios.post(`${apiUrl}/api/add-user-order/${userId}`, orderdata)
+      if (response.status == 200) {
+        console.log("Success Order")
+      }
+    } catch (error) {
+      console.error("Error during post order:", error);
+    }
 
     try {
         const response = await fetch(`${checkoutUrl}/v1/payment-links`, {
@@ -188,6 +240,12 @@ const CartScreen = ({navigation}:any) => {
         // Handle error
         console.error("Error during checkout:", error);
     }
+
+    await axios.post(
+      `${apiUrl}/api/remove-items/${userId}`
+    );
+
+    fetchCart();
   }
 
 
@@ -201,10 +259,28 @@ const CartScreen = ({navigation}:any) => {
         <View
           style={[styles.ScrollViewInnerView, {marginBottom: tabBarHeight}]}>
           <View style={styles.ItemContainer}>
-            <HeaderBar />
+            {/* <HeaderBar /> */}
 
+            <View style={styles.HeaderContainer}>
+              <TouchableOpacity 
+              style={styles.AddressBox}
+              onPress={()=>navigation.navigate('Address')}
+              >
+                  <View>
+            <CustomIcon
+                    style={styles.InputIcon}
+                    name="location"
+                    size={FONTSIZE.size_30}
+                    color={COLORS.primaryLightGreyHex}
+                  />
+            </View>
+          <View style={styles.innerAddressBox}>
+            <Text style={styles.AddressTitle}>Deliver To</Text>
+            <Text style={styles.AddressText}>{addressUser.length > 0 ? addressUser[0].recipient : 'Loading...'}</Text>
+          </View>
+        </TouchableOpacity>
+    </View>
             
-
             {cartList.length == 0 ? (
               <EmptyListAnimation title={'Cart is Empty'} />
             ) : (
@@ -242,7 +318,7 @@ const CartScreen = ({navigation}:any) => {
           {cartList.length != 0 ? (
             <PaymentFooter
               buttonPressHandler={checkoutHandler}
-              buttonTitle="Pay"
+              buttonTitle="Checkout"
               price={cartPrice}
             />
           ) : (
@@ -272,7 +348,46 @@ ItemContainer: {
 ListItemContainer: {
   paddingHorizontal: SPACING.space_20,
   gap: SPACING.space_20,
-}
+},
+HeaderContainer: {
+  paddingTop: SPACING.space_30,
+  paddingLeft:SPACING.space_30,
+  paddingRight:SPACING.space_30,
+  paddingBottom:SPACING.space_20,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+},
+
+HeaderText: {
+  fontFamily: FONTFAMILY.poppins_semibold,
+  fontSize: FONTSIZE.size_20,
+  color: COLORS.primaryWhiteHex,
+},
+AddressBox: {
+  alignItems: 'center',
+  flexDirection:'row',
+  height: 60,
+  width:200,
+  borderRadius: BORDERRADIUS.radius_20,
+  backgroundColor: COLORS.primaryDarkGreyHex,
+},
+AddressTitle: {
+  fontFamily: FONTFAMILY.poppins_medium,
+  fontSize: FONTSIZE.size_14,
+  color: COLORS.primaryWhiteHex,
+},
+AddressText:{
+  fontFamily: FONTFAMILY.poppins_medium,
+  fontSize: FONTSIZE.size_16,
+  color: COLORS.primaryWhiteHex,
+},
+innerAddressBox:{
+  marginTop:5
+},
+InputIcon: {
+  marginHorizontal: SPACING.space_20,
+},
 });
 
 export default CartScreen

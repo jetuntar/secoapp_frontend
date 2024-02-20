@@ -26,6 +26,9 @@ import CoffeeCard from '../components/CoffeeCard';
 import {Dimensions} from 'react-native';
 import apiUrl from '../../apiConfig';
 import { Icon } from 'react-native-vector-icons/Icon';
+import GradientBGIconVector from '../components/GradientBGIconVector';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 const getCategoriesFromData = (data: any) => {
   let temp: any = {};
@@ -63,10 +66,17 @@ interface CoffeeDataItem {
   price: number;
 }
 
+interface Address {
+  address: string;
+  id: number;
+  phone: string;
+  recipient: string;
+  userId: number;
+}
 
 const HomeScreen = ({navigation}: any) => {
+  const [addressUser, setAddressUser] = useState<Address[]>([])
   const CoffeeList = useStore((state: any) => state.CoffeeList);
-  const BeanList = useStore((state: any) => state.BeanList);
   const addToCart = useStore((state: any) => state.addToCart);
   const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
 
@@ -140,12 +150,41 @@ const HomeScreen = ({navigation}: any) => {
 
   const [coffeeData, setCoffeeData] = useState<CoffeeDataItem[]>([]);
 
+  const getUserAddress = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const response = await fetch(`${apiUrl}/api/get-address/${userId}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch carts');
+      }
+      const data = await response.json();
+      setAddressUser(data);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   useEffect(() => {
+    getUserAddress();
     fetch(`${apiUrl}/api/coffee`)
       .then(response => response.json())
       .then(data => setCoffeeData(data))
       .catch(error => console.error(error));
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      // Clear the token from AsyncStorage
+      await AsyncStorage.multiRemove(['userId', 'token'])
+
+      // navigation.navigate('Login')
+      Alert.alert('Ini harusnya logout, tapi belum jadi')
+    } catch (error) {
+      console.error('Logout failed', error);
+      // Optionally, display an alert or handle the error in another way
+    }
+  };
 
   return (
     <View style={styles.ScreenContainer}>
@@ -154,7 +193,30 @@ const HomeScreen = ({navigation}: any) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.ScrollViewFlex}>
         {/* App Header */}
-        <HeaderBar />
+        <View style={styles.HeaderContainer}>
+      <TouchableOpacity 
+      style={styles.AddressBox}
+      onPress={()=>navigation.navigate('Address')}>
+          <View>
+            <CustomIcon
+                    style={styles.InputIcon}
+                    name="location"
+                    size={FONTSIZE.size_30}
+                    color={COLORS.primaryLightGreyHex}
+                  />
+            </View>
+          <View style={styles.innerAddressBox}>
+            <Text style={styles.AddressTitle}>Deliver To</Text>
+            <Text style={styles.AddressText}>{addressUser.length > 0 ? addressUser[0].recipient : 'Loading...'}</Text>
+          </View>
+        </TouchableOpacity>
+      <GradientBGIconVector
+        onPress={handleLogout}
+        nameVector="logout"
+        colorVector={COLORS.primaryLightGreyHex}
+        sizeVector={FONTSIZE.size_16}
+      />
+    </View>
 
         {/* Search Input */}
 
@@ -302,6 +364,43 @@ const styles = StyleSheet.create({
     marginTop: SPACING.space_20,
     fontFamily: FONTFAMILY.poppins_medium,
     color: COLORS.secondaryLightGreyHex,
+  },
+  HeaderContainer: {
+    paddingTop: SPACING.space_30,
+    paddingLeft:SPACING.space_30,
+    paddingRight:SPACING.space_30,
+    paddingBottom:SPACING.space_20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  HeaderText: {
+    fontFamily: FONTFAMILY.poppins_semibold,
+    fontSize: FONTSIZE.size_20,
+    color: COLORS.primaryWhiteHex,
+  },
+
+  AddressBox: {
+    alignItems: 'center',
+    flexDirection:'row',
+    height: 60,
+    width:200,
+    borderRadius: BORDERRADIUS.radius_20,
+    backgroundColor: COLORS.primaryDarkGreyHex,
+  },
+  AddressTitle: {
+    fontFamily: FONTFAMILY.poppins_medium,
+    fontSize: FONTSIZE.size_14,
+    color: COLORS.primaryWhiteHex,
+  },
+  AddressText:{
+    fontFamily: FONTFAMILY.poppins_medium,
+    fontSize: FONTSIZE.size_16,
+    color: COLORS.primaryWhiteHex,
+  },
+  innerAddressBox:{
+    marginTop:5
   },
 });
 

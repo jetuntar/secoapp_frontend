@@ -88,7 +88,6 @@ const DetailsScreen = ({navigation, route}: any) => {
     id,
   }: any) => {
     addToCart(id);
-    // calculateCartPrice();
     navigation.goBack();
   };
 

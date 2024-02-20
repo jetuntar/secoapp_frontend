@@ -71,7 +71,6 @@ const FavoritesScreen = ({ navigation}: any) => {
         contentContainerStyle={styles.scrollViewFlex}>
         <View style={[styles.scrollViewInnerView, { marginBottom: tabBarHeight }]}>
           <View style={styles.itemContainer}>
-            <HeaderBar/>
 
             {favoritesList.length === 0 ? (
               <EmptyListAnimation title={'No Favourites'} />

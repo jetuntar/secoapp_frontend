@@ -20,22 +20,113 @@ import HeaderBar from '../components/HeaderBar';
 import EmptyListAnimation from '../components/EmptyListAnimation';
 import PopUpAnimation from '../components/PopUpAnimation';
 import OrderHistoryCard from '../components/OrderHistoryCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import apiUrl from '../../apiConfig';
+import { useFocusEffect } from '@react-navigation/native';
+import OrderItemCard from '../components/OrderItemCard';
 
+interface Address {
+  address: string;
+  id: number;
+  phone: string;
+  recipient: string;
+  userId: number;
+}
 
-
+interface CartItem {
+  itemId: string;
+  quantity: number;
+}
 
 const OrderHistoryScreen = ({navigation}: any) => {
   const OrderHistoryList = useStore((state: any) => state.OrderHistoryList);
   const tabBarHeight = useBottomTabBarHeight();
   const [showAnimation, setShowAnimation] = useState(false);
 
-  const navigationHandler = ({index, id, type}: any) => {
+  const [orderList, setOrderList] = useState<any[]>([])
+  const [itemList, setItemList] = useState<any[]>([])
+  const [itemDetails, setItemDetails] = useState<any>([])
+  const [addressUser, setAddressUser] = useState<Address[]>([])
+
+  const navigationHandler = ({id}: any) => {
     navigation.push('Details', {
-      index,
-      id,
-      type,
+      id
     });
   };
+
+  const getUserOrderItem = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const response = await fetch(`${apiUrl}/api/get-user-orders/${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch orders');
+      }
+      const data = await response.json();
+      setOrderList(data);
+      const itemIds = data.map(({ itemId, quantity}: any) => {
+        return { itemId, quantity};
+      });
+      setItemList(itemIds);
+      return { data, itemIds };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  const getItemDetails = async (data: CartItem[]) => {
+    try {
+      const itemDetails = await Promise.all(
+        data.map(async ({ itemId }: any) => {
+          const priceResponse = await fetch(`${apiUrl}/api/coffee-item/${itemId}`);
+          if (!priceResponse.ok) {
+            throw new Error('Failed to fetch item price');
+          }
+          const itemData = await priceResponse.json();
+          return itemData;
+        })
+      );
+      return itemDetails;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const getUserAddress = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const response = await fetch(`${apiUrl}/api/get-address/${userId}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch carts');
+      }
+      const data = await response.json();
+      setAddressUser(data);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  
+  const fetchCart = async () => {
+    try {
+      const { data } = await getUserOrderItem();
+      const itemDetails = await getItemDetails(data);
+      setItemDetails(itemDetails);
+      getUserAddress();
+      // console.log(addressUser);
+    } catch (error) {
+      console.error(error);
+      // Handle error here, e.g., show error message to user
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchCart();
+    }, [])
+  );
 
   const buttonPressHandler = () => {
     setShowAnimation(true);
@@ -63,25 +154,27 @@ const OrderHistoryScreen = ({navigation}: any) => {
         <View
           style={[styles.ScrollViewInnerView, {marginBottom: tabBarHeight}]}>
           <View style={styles.ItemContainer}>
-            <HeaderBar title="Order History" />
 
-            {OrderHistoryList.length == 0 ? (
+            {orderList.length == 0 ? (
               <EmptyListAnimation title={'No Order History'} />
             ) : (
               <View style={styles.ListItemContainer}>
-                {OrderHistoryList.map((data: any, index: any) => (
-                  <OrderHistoryCard
-                    key={index.toString()}
-                    navigationHandler={navigationHandler}
-                    CartList={data.CartList}
-                    CartListPrice={data.CartListPrice}
-                    OrderDate={data.OrderDate}
-                  />
+                {itemList.map(({itemId, quantity}: any) => (
+                  <OrderItemCard
+                  id={itemId}
+                  quantity={quantity}
+                  type={itemId.type}
+                  name={itemId.name}
+                  imagelink_square={itemId.imagelink_square}
+                  special_ingredient={itemId.special_ingredient}
+                  price={itemId.prices}
+                  ItemPrice={itemId.ItemPrice}
+                />
                 ))}
               </View>
             )}
           </View>
-          {OrderHistoryList.length > 0 ? (
+          {/* {OrderHistoryList.length > 0 ? (
             <TouchableOpacity
               style={styles.DownloadButton}
               onPress={() => {
@@ -91,7 +184,7 @@ const OrderHistoryScreen = ({navigation}: any) => {
             </TouchableOpacity>
           ) : (
             <></>
-          )}
+          )} */}
         </View>
       </ScrollView>
     </View>
