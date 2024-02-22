@@ -64,7 +64,9 @@ const App = () => {
         <Stack.Screen name="Login">
             {(props) => <LoginScreen {...props} onAuthentication={handleAuthentication} onAdmin={handleAdmin}/>}
           </Stack.Screen>
-          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Register">
+          {(props) => <RegisterScreen {...props} onAuthentication={handleAuthentication}/>}
+          </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
     );

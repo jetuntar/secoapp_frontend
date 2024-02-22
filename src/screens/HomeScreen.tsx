@@ -207,7 +207,7 @@ const HomeScreen = ({navigation}: any) => {
             </View>
           <View style={styles.innerAddressBox}>
             <Text style={styles.AddressTitle}>Deliver To</Text>
-            <Text style={styles.AddressText}>{addressUser.length > 0 ? addressUser[0].recipient : 'Loading...'}</Text>
+            <Text style={styles.AddressText}>{addressUser.length > 0 ? addressUser[0].recipient : 'Set Address'}</Text>
           </View>
         </TouchableOpacity>
       <GradientBGIconVector
