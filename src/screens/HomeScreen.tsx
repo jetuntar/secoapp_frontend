@@ -194,16 +194,16 @@ const HomeScreen = ({navigation}: any) => {
         contentContainerStyle={styles.ScrollViewFlex}>
         {/* App Header */}
         <View style={styles.HeaderContainer}>
-      <TouchableOpacity 
-      style={styles.AddressBox}
-      onPress={()=>navigation.navigate('Address')}>
-          <View>
-            <CustomIcon
-                    style={styles.InputIcon}
-                    name="location"
-                    size={FONTSIZE.size_30}
-                    color={COLORS.primaryLightGreyHex}
-                  />
+          <TouchableOpacity 
+          style={styles.AddressBox}
+          onPress={()=>navigation.navigate('Address')}>
+            <View>
+              <CustomIcon
+                      style={styles.InputIcon}
+                      name="location"
+                      size={FONTSIZE.size_30}
+                      color={COLORS.primaryLightGreyHex}
+                    />
             </View>
           <View style={styles.innerAddressBox}>
             <Text style={styles.AddressTitle}>Deliver To</Text>
