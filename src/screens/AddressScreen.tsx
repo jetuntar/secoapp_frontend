@@ -9,8 +9,8 @@ const AddressScreen = ({ navigation }: any) => {
   const [recipient, setRecipient] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
+  const [latitude, setLatitude] = useState<any | null>(null);
+  const [longitude, setLongitude] = useState<any | null>(null);
 
   const getUserAddress = async () => {
     try {
@@ -45,13 +45,15 @@ const AddressScreen = ({ navigation }: any) => {
 
   useEffect(() => {
     getCurrentLocation();
-    getUserAddress(); // Fetch address when component mounts
+    getUserAddress();
   }, []);
 
   const saveAddress = async () => {
     try {
+      console.log(latitude)
+      console.log(longitude)
       const userId = await AsyncStorage.getItem('userId');
-      const newAddress = { recipient, address, phone }; // Collect new address data
+      const newAddress = { recipient, address, phone}; // Collect new address data
       const response = await fetch(`${apiUrl}/api/address/${userId}`, {
         method: "PUT",
         headers: {
@@ -62,7 +64,7 @@ const AddressScreen = ({ navigation }: any) => {
       if (!response.ok) {
         throw new Error('Failed to save address');
       }
-      // Optionally handle success
+      navigation.goBack();
     } catch (error) {
       console.error(error);
     }

@@ -26,23 +26,6 @@ const HeaderBar = () => {
 
   return (
     <View style={styles.HeaderContainer}>
-      <TouchableOpacity 
-      style={styles.AddressBox}
-      
-      >
-          <View>
-            <CustomIcon
-                    style={styles.InputIcon}
-                    name="location"
-                    size={FONTSIZE.size_30}
-                    color={COLORS.primaryLightGreyHex}
-                  />
-            </View>
-          <View style={styles.innerAddressBox}>
-            <Text style={styles.AddressTitle}>Deliver To</Text>
-            <Text style={styles.AddressText}>Kost Standing</Text>
-          </View>
-        </TouchableOpacity>
       <GradientBGIconVector
         onPress={handleLogout}
         nameVector="logout"
@@ -58,9 +41,7 @@ export default HeaderBar;
 const styles = StyleSheet.create({
   HeaderContainer: {
     padding: SPACING.space_30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: 'flex-end',
   },
 
   HeaderText: {

@@ -59,7 +59,7 @@ const RegisterScreen = ({ navigation, onAuthentication}: RegisterScreenProps) =>
       <View>
       <Text style={styles.baseText}>
       Already have an account?
-      <TouchableOpacity onPress={()=>navigation.push('Login')}><Text style={styles.innerText}>Login</Text></TouchableOpacity>
+      <TouchableOpacity onPress={()=>navigation.push('Login')}><Text style={styles.innerText}>Sign In</Text></TouchableOpacity>
     </Text>
       </View>
     </View>
@@ -79,8 +79,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   baseText: {
-    marginStart: 72,
-    marginTop: 15,
+    marginTop:5,
+    alignSelf:'center',
     fontWeight: 'normal',
   },
   innerText: {
@@ -95,9 +95,9 @@ const styles = StyleSheet.create({
     alignContent:'center',
   },
   textInputUsername: {
-    height: 45,
-    marginStart: 45,
-    marginEnd: 45,
+    alignSelf:'center',
+    width: 253, // Adjust width
+    height: 50, // Adjust height
     borderColor: '#535947',
     borderWidth: 1,
     borderRadius: 100, // Adjust border radius here
@@ -106,9 +106,9 @@ const styles = StyleSheet.create({
     paddingLeft: 30, // Add some padding to the inside of the TextInput
   },
   textInputPassword: {
-    height: 45,
-    marginStart: 45,
-    marginEnd: 45,
+    alignSelf:'center',
+    width: 253, // Adjust width
+    height: 50, // Adjust height
     borderColor: '#535947',
     borderWidth: 1,
     borderRadius: 100, // Adjust border radius here
@@ -117,9 +117,10 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#535947', // Button color
-    marginStart: 45,
-    marginEnd: 45,
-    padding: 10,
+    alignSelf:'center',
+    width: 253, // Adjust width
+    height: 50, // Adjust height
+    padding: 14,
     borderRadius: 100, // Adjust button border radius here
     alignItems: 'center',
   },

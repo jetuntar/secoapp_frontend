@@ -29,6 +29,8 @@ import { Icon } from 'react-native-vector-icons/Icon';
 import GradientBGIconVector from '../components/GradientBGIconVector';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
 
 const getCategoriesFromData = (data: any) => {
   let temp: any = {};
@@ -150,6 +152,17 @@ const HomeScreen = ({navigation}: any) => {
 
   const [coffeeData, setCoffeeData] = useState<CoffeeDataItem[]>([]);
 
+  const getItems =  async () => {
+    try {
+      const items = await fetch(`${apiUrl}/api/coffee`);
+      const data = await items.json();
+        setCoffeeData(data);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  } 
+
   const getUserAddress = async () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
@@ -165,13 +178,13 @@ const HomeScreen = ({navigation}: any) => {
     }
   }
 
-  useEffect(() => {
-    getUserAddress();
-    fetch(`${apiUrl}/api/coffee`)
-      .then(response => response.json())
-      .then(data => setCoffeeData(data))
-      .catch(error => console.error(error));
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      // Function to refresh the screen, such as refetching data
+      getItems();
+      getUserAddress();
+    }, [])
+  );
 
   const handleLogout = async () => {
     try {

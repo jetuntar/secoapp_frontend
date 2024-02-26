@@ -109,7 +109,7 @@ const OrderHistoryScreen = ({navigation}: any) => {
   }
 
   
-  const fetchCart = async () => {
+  const fetchOrder = async () => {
     try {
       const { data } = await getUserOrderItem();
       const itemDetails = await getItemDetails(data);
@@ -124,7 +124,7 @@ const OrderHistoryScreen = ({navigation}: any) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchCart();
+      fetchOrder();
     }, [])
   );
 
