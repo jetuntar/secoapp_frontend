@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import axios from 'axios';
-import SplashScreen from 'react-native-splash-screen';
 
 import apiUrl from './apiConfig';
 import TabNavigator from './src/navigators/TabNavigator';

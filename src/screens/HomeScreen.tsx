@@ -22,7 +22,6 @@ import {
 import HeaderBar from '../components/HeaderBar';
 import CustomIcon from '../components/CustomIcon';
 import {FlatList} from 'react-native';
-import CoffeeCard from '../components/CoffeeCard';
 import {Dimensions} from 'react-native';
 import apiUrl from '../../apiConfig';
 import { Icon } from 'react-native-vector-icons/Icon';
@@ -31,6 +30,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
+import MealCard from '../components/MealCard';
 
 const getCategoriesFromData = (data: any) => {
   let temp: any = {};
@@ -56,16 +56,14 @@ const getCoffeeList = (category: string, data: any) => {
 };
 
 
-interface CoffeeDataItem {
+interface MealDataItem {
   id: string;
-  index: number;
-  type: string;
-  roasted: string;
   imagelink_square: string;
   name: string;
-  special_ingredient: string;
-  average_rating: number;
+  description: string;
+  item_piece:string;
   price: number;
+  type: string;
 }
 
 interface Address {
@@ -77,7 +75,6 @@ interface Address {
 }
 
 const HomeScreen = ({navigation}: any) => {
-  const [addressUser, setAddressUser] = useState<Address[]>([])
   const CoffeeList = useStore((state: any) => state.CoffeeList);
   const addToCart = useStore((state: any) => state.addToCart);
   const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
@@ -150,13 +147,14 @@ const HomeScreen = ({navigation}: any) => {
     );
   };
 
-  const [coffeeData, setCoffeeData] = useState<CoffeeDataItem[]>([]);
+  const [mealData, setMealData] = useState<MealDataItem[]>([]);
+  const [addressUser, setAddressUser] = useState<Address[]>([]);
 
   const getItems =  async () => {
     try {
-      const items = await fetch(`${apiUrl}/api/coffee`);
+      const items = await fetch(`${apiUrl}/api/meals`);
       const data = await items.json();
-        setCoffeeData(data);
+        setMealData(data);
     } catch (error) {
       console.error(error);
       throw error;
@@ -191,7 +189,7 @@ const HomeScreen = ({navigation}: any) => {
       // Clear the token from AsyncStorage
       await AsyncStorage.multiRemove(['userId', 'token'])
 
-      // navigation.navigate('Login')
+      
       Alert.alert('Ini harusnya logout, tapi belum jadi')
     } catch (error) {
       console.error('Logout failed', error);
@@ -250,7 +248,7 @@ const HomeScreen = ({navigation}: any) => {
             />
           </TouchableOpacity>
           <TextInput
-            placeholder="Find Your Coffee..."
+            placeholder="Find Your Meal..."
             value={searchText}
             onChangeText={text => {
               setSearchText(text);
@@ -276,40 +274,35 @@ const HomeScreen = ({navigation}: any) => {
           )}
         </View>
         
-        {/* Coffee Flatlist */}
+        {/* Meal Flatlist */}
 
         <FlatList
           horizontal
           ListEmptyComponent={
             <View style={styles.EmptyListContainer}>
-              <Text style={styles.CategoryText}>No Coffee Available</Text>
+              <Text style={styles.CategoryText}>No Meal Available</Text>
             </View>
           }
           showsHorizontalScrollIndicator={false}
-          data={coffeeData}
+          data={mealData}
           contentContainerStyle={styles.FlatListContainer}
           keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
                 navigation.push('Details', {
-                  // index: item.index,
                   id: item.id,
-                  // type: item.type,
                 },
-                // console.log(item.index)
                 );
               }
               }>
-              <CoffeeCard
+              <MealCard
                 id={item.id}
-                index={item.index}
+                item_piece={item.item_piece}
                 type={item.type}
-                roasted={item.roasted}
                 imagelink_square={item.imagelink_square}
                 name={item.name}
-                special_ingredient={item.special_ingredient}
-                average_rating={item.average_rating}
+                description={item.description}
                 price={item.price}
                 buttonPressHandler={undefined}
               />

@@ -32,18 +32,18 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
   ItemPrice,
 }) => {
 
-  const [coffeeItem, setCoffeeItem] = useState<any>(null);
+  const [mealItem, setMealItem] = useState<any>(null);
 
   useEffect(() => {
     const fetchCoffeeItem = async () => {
       try {
         // console.log(id);
-        const response = await fetch(`${apiUrl}/api/coffee-item/${id}`); // Use id from props
+        const response = await fetch(`${apiUrl}/api/meal-item/${id}`); // Use id from props
         if (!response.ok) {
           throw new Error('Failed to fetch coffee item');
         }
         const data = await response.json();
-        setCoffeeItem(data);
+        setMealItem(data);
       } catch (error) {
         console.error(error);
         // Handle error here
@@ -56,7 +56,7 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
 
   return (
     <View>
-      {coffeeItem && (
+      {mealItem && (
         <>
         <LinearGradient
           start={{x: 0, y: 0}}
@@ -65,15 +65,15 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
           style={styles.CardLinearGradient}>
           <View style={styles.CardInfoContainer}>
             <View style={styles.CardImageInfoContainer}>
-              <Image source={{uri: coffeeItem.imagelink_square}} style={styles.Image} />
+              <Image source={{uri: mealItem.imagelink_square}} style={styles.Image} />
               <View>
-                <Text style={styles.CardTitle}>{coffeeItem.name}</Text>
-                <Text style={styles.CardSubtitle}>{coffeeItem.special_ingredient}</Text>
+                <Text style={styles.CardTitle}>{mealItem.name}</Text>
+                <Text style={styles.CardSubtitle}>{mealItem.special_ingredient}</Text>
               </View>
             </View>
             <View>
               <Text style={styles.CardCurrency}>
-                Rp.<Text style={styles.CardPrice}>{coffeeItem.price}</Text>
+                Rp.<Text style={styles.CardPrice}>{mealItem.price}</Text>
               </Text>
             </View>
           </View>
@@ -81,7 +81,7 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
               <View style={styles.CardTableRow}>
                 <View style={styles.PriceBoxRight}>
                   <Text style={styles.PriceCurrency}>
-                    Rp.<Text style={styles.Price}> {coffeeItem.price}</Text>
+                    Rp.<Text style={styles.Price}> {mealItem.price}</Text>
                   </Text>
                 </View>
               </View>
@@ -91,7 +91,7 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
                   X <Text style={styles.Price}>{quantity}</Text>
                 </Text>
                 <Text style={styles.CardQuantityPriceText}>
-                  Rp.{(quantity * coffeeItem.price).toFixed(2).toString()}
+                  Rp. {(quantity * mealItem.price).toFixed(2).toString()}
                 </Text>
               </View>
             </View>

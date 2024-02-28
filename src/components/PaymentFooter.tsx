@@ -25,7 +25,7 @@ const PaymentFooter: React.FC<PaymentFooterProps> = ({
       <View style={styles.PriceContainer}>
         <Text style={styles.PriceTitle}>Price</Text>
         <Text style={styles.PriceText}>
-        $ <Text style={styles.Price}>{price}</Text>
+        Rp. <Text style={styles.Price}>{price}</Text>
         </Text>
       </View>
       <TouchableOpacity
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   },
   PriceContainer: {
     alignItems: 'center',
-    width: 100,
+    width: 120,
   },
   PriceTitle: {
     fontFamily: FONTFAMILY.poppins_medium,
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   PriceText: {
     fontFamily: FONTFAMILY.poppins_semibold,
-    fontSize: FONTSIZE.size_24,
+    fontSize: FONTSIZE.size_20,
     color: COLORS.primaryOrangeHex,
   },
   Price: {

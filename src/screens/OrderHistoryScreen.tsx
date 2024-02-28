@@ -78,7 +78,7 @@ const OrderHistoryScreen = ({navigation}: any) => {
     try {
       const itemDetails = await Promise.all(
         data.map(async ({ itemId }: any) => {
-          const priceResponse = await fetch(`${apiUrl}/api/coffee-item/${itemId}`);
+          const priceResponse = await fetch(`${apiUrl}/api/meal-item/${itemId}`);
           if (!priceResponse.ok) {
             throw new Error('Failed to fetch item price');
           }

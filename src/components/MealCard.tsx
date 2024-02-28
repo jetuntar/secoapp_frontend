@@ -21,28 +21,23 @@ import BGIcon from './BGIcon';
 
 const CARD_WIDTH = Dimensions.get('window').width * 0.32;
 
-interface CoffeeCardProps {
+interface MealCardProps {
   id: string;
-  index: number;
-  type: string;
-  roasted: string;
   imagelink_square: string;
   name: string;
-  special_ingredient: string;
-  average_rating: number;
-  price: any;
+  description: string;
+  item_piece:string;
+  price: number;
+  type: string;
   buttonPressHandler: any;
 }
 
-const CoffeeCard: React.FC<CoffeeCardProps> = ({
+const MealCard: React.FC<MealCardProps> = ({
   id,
-  index,
   type,
-  roasted,
   imagelink_square,
   name,
-  special_ingredient,
-  average_rating,
+  item_piece,
   price,
   buttonPressHandler,
 }) => {
@@ -56,18 +51,10 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
         source={{uri: imagelink_square}}
         style={styles.CardImageBG}
         resizeMode="cover">
-          <View style={styles.CardRatingContainer}>
-            <CustomIcon
-              name={'star'}
-              color={COLORS.primaryOrangeHex}
-              size={FONTSIZE.size_16}
-            />
-          <Text style={styles.CardRatingText}>{average_rating}</Text>
-        </View>
       </ImageBackground>
 
       <Text style={styles.CardTitle}>{name}</Text>
-      <Text style={styles.CardSubtitle}>{special_ingredient}</Text>
+      <Text style={styles.CardSubtitle}>{item_piece}</Text>
       <View style={styles.CardFooterRow}>
         <Text style={styles.CardPriceCurrency}>
           $ <Text style={styles.CardPrice}>{price}</Text>
@@ -76,13 +63,11 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
           onPress={() => {
             buttonPressHandler({
               id,
-              index,
               type,
-              roasted,
               imagelink_square,
               name,
-              special_ingredient,
-              prices: [{...price, quantity: 1}],
+              item_piece,
+              prices: [{price, quantity: 1}],
             });
           }}>
           <BGIcon
@@ -154,4 +139,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CoffeeCard;
+export default MealCard;

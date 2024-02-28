@@ -69,7 +69,7 @@ const CartScreen = ({navigation}:any) => {
     try {
       const itemDetails = await Promise.all(
         data.map(async ({ itemId }: any) => {
-          const priceResponse = await fetch(`${apiUrl}/api/coffee-item/${itemId}`);
+          const priceResponse = await fetch(`${apiUrl}/api/meal-item/${itemId}`);
           if (!priceResponse.ok) {
             throw new Error('Failed to fetch item price');
           }
@@ -90,7 +90,7 @@ const CartScreen = ({navigation}:any) => {
         const totalPriceItem = item.price * cartList[index].quantity;
         return acc + totalPriceItem;
       }, 0);
-      return totalPriceCart + 5000;
+      return totalPriceCart;
     } catch (error) {
       console.error(error);
       throw error;
@@ -167,7 +167,14 @@ const CartScreen = ({navigation}:any) => {
   };
 
   let currentDate = new Date();
-  let formattedDate = currentDate.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/[/\s/:]/g, '-');
+  let year = currentDate.getFullYear();
+  let month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+  let day = ("0" + currentDate.getDate()).slice(-2);
+  let hour = ("0" + currentDate.getHours()).slice(-2);
+  let minute = ("0" + currentDate.getMinutes()).slice(-2);
+  let second = ("0" + currentDate.getSeconds()).slice(-2);
+
+  let formattedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 
 
   const checkoutHandler = async () => {
@@ -186,7 +193,7 @@ const CartScreen = ({navigation}:any) => {
         quantity: cartList[index]?.quantity || 0
       })),
       transaction_details: {
-        order_id: `ORDER-${formattedDate}`,
+        order_id: `ORDER-${Math.floor(Math.random() * 1000000)}`,
         gross_amount: cartPrice
       }
     };
@@ -226,7 +233,7 @@ const CartScreen = ({navigation}:any) => {
 
         const paymentLink = await response.json()
         let payment_url = paymentLink.payment_url
-        // console.log(payment_url)
+        console.log(payment_url)
         Linking.openURL(payment_url)
         .then((supported) => {
           if (!supported) {
@@ -297,11 +304,9 @@ const CartScreen = ({navigation}:any) => {
                       id={itemId}
                       quantity={quantity}
                       name={itemId.name}
+                      item_piece={itemId.item_piece}
                       imagelink_square={itemId.imagelink_square}
-                      special_ingredient={itemId.special_ingredient}
-                      roasted={itemId.roasted}
                       price={itemId.price}
-                      type={itemId.type}
                       incrementCartItemQuantityHandler={
                         incrementCartItemQuantityHandler
                       }

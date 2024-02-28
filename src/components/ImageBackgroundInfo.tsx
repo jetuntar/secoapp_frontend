@@ -14,43 +14,28 @@ import {
   FONTSIZE,
   SPACING,
 } from '../theme/theme';
-import CustomIcon from './CustomIcon';
 
 interface ImageBackgroundInfoProps {
   EnableBackHandler: boolean;
-  imagelink_portrait: string;
-  type: string;
+  imagelink_square: string;
   id: string;
   favourite: boolean;
-  name: string;
-  special_ingredient: string;
-  ingredients: string;
-  average_rating: number;
-  ratings_count: string;
-  roasted: string;
   BackHandler?: any;
   toggleFavourite: any;
 }
 
 const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
   EnableBackHandler,
-  imagelink_portrait,
-  type,
+  imagelink_square,
   id,
   favourite,
-  name,
-  special_ingredient,
-  ingredients,
-  average_rating,
-  ratings_count,
-  roasted,
   BackHandler,
   toggleFavourite,
 }) => {
   return (
     <View>
       <ImageBackground
-        source={{uri : imagelink_portrait}}
+        source={{uri : imagelink_square}}
         style={styles.ItemBackgroundImage}>
         {EnableBackHandler ? (
           <View style={styles.ImageHeaderBarContainerWithBack}>
@@ -93,62 +78,6 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
             </TouchableOpacity>
           </View>
         )}
-
-        <View style={styles.ImageInfoOuterContainer}>
-          <View style={styles.ImageInfoInnerContainer}>
-            <View style={styles.InfoContainerRow}>
-              <View>
-                <Text style={styles.ItemTitleText}>{name}</Text>
-                <Text style={styles.ItemSubtitleText}>
-                  {special_ingredient}
-                </Text>
-              </View>
-              <View style={styles.ItemPropertiesContainer}>
-                <View style={styles.ProperFirst}>
-                  <CustomIcon
-                    name={type == 'Bean' ? 'bean' : 'beans'}
-                    size={type == 'Bean' ? FONTSIZE.size_18 : FONTSIZE.size_24}
-                    color={COLORS.primaryOrangeHex}
-                  />
-                  <Text
-                    style={[
-                      styles.PropertyTextFirst,
-                      {
-                        marginTop:
-                          type == 'Bean'
-                            ? SPACING.space_4 + SPACING.space_2
-                            : 0,
-                      },
-                    ]}>
-                    {type}
-                  </Text>
-                </View>
-                <View style={styles.ProperFirst}>
-                  <CustomIcon
-                    name={type == 'Bean' ? 'location' : 'drop'}
-                    size={FONTSIZE.size_16}
-                    color={COLORS.primaryOrangeHex}
-                  />
-                  <Text style={styles.PropertyTextLast}>{ingredients}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.InfoContainerRow}>
-              <View style={styles.RatingContainer}>
-                <CustomIcon
-                  name={'star'}
-                  color={COLORS.primaryOrangeHex}
-                  size={FONTSIZE.size_20}
-                />
-                <Text style={styles.RatingText}>{average_rating}</Text>
-                <Text style={styles.RatingCountText}>({ratings_count})</Text>
-              </View>
-              <View style={styles.RoastedContainer}>
-                <Text style={styles.RoastedText}>{roasted}</Text>
-              </View>
-            </View>
-          </View>
-        </View>
       </ImageBackground>
     </View>
   );
@@ -157,7 +86,7 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
 const styles = StyleSheet.create({
   ItemBackgroundImage: {
     width: '100%',
-    aspectRatio: 20 / 25,
+    aspectRatio: 20 / 20,
     justifyContent: 'space-between',
   },
   ImageHeaderBarContainerWithBack: {

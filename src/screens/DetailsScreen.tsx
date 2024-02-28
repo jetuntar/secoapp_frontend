@@ -22,28 +22,22 @@ import apiUrl from '../../apiConfig';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface CoffeeDetail {
-  price:number;
-  description: string;
-  imagelink_portrait: any;
-  imagelink_square:any;
-  type: string;
+interface MealDetail {
   id: string;
-  favourite: boolean;
+  imagelink_square: string;
   name: string;
-  special_ingredient: string;
-  ingredients: string;
-  average_rating: number;
-  ratings_count: string;
-  roasted: string;
-  index:number;
+  description: string;
+  item_piece:string;
+  price: number;
+  type: string;
+  favourite:boolean;
 }
 
 
 const DetailsScreen = ({navigation, route}: any) => {
   
   const { id } = route.params;
-  const [coffeeDetail, setCoffeeDetail] = useState<CoffeeDetail | null>(null);// Use 'any' for now
+  const [mealDetail, setMealDetail] = useState<MealDetail | null>(null);// Use 'any' for now
 
   // const ItemOfIndex = useStore((state: any) =>
   //   route.params.type == 'Coffee' ? state.CoffeeList : state.BeanList,
@@ -92,10 +86,10 @@ const DetailsScreen = ({navigation, route}: any) => {
   };
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/coffee-item/${id}`)
+    fetch(`${apiUrl}/api/meal-item/${id}`)
       .then(response => response.json())
       .then(data => {
-        setCoffeeDetail(data);
+        setMealDetail(data);
       })
       .catch(error => {
         console.error(error);
@@ -107,35 +101,27 @@ const DetailsScreen = ({navigation, route}: any) => {
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.ScrollViewFlex}
-      >
+        contentContainerStyle={styles.ScrollViewFlex}>
         <ImageBackgroundInfo
           EnableBackHandler={true}
-          imagelink_portrait={coffeeDetail ? coffeeDetail.imagelink_portrait : 'Image not found'}
-          type={coffeeDetail ? coffeeDetail.type : ''}
-          id={coffeeDetail ? coffeeDetail.id : ''}
-          favourite={coffeeDetail ? coffeeDetail.favourite : false}
-          name={coffeeDetail ? coffeeDetail.name : ''}
-          special_ingredient={coffeeDetail ? coffeeDetail.special_ingredient : ''}
-          ingredients={coffeeDetail ? coffeeDetail.ingredients : ''}
-          average_rating={coffeeDetail ? coffeeDetail.average_rating : 0}
-          ratings_count={coffeeDetail ? coffeeDetail.ratings_count : ''}
-          roasted={coffeeDetail ? coffeeDetail.roasted : ''}
+          imagelink_square={mealDetail ? mealDetail.imagelink_square : 'Image not found'}
+          id={mealDetail ? mealDetail.id : ''}
+          favourite={mealDetail ? mealDetail.favourite : false}
           BackHandler={BackHandler}
           toggleFavourite={toggleFavourite}
         />
         <View style={styles.FooterInfoArea}>
           <Text style={styles.InfoTitle}>Description</Text>
           <Text style={styles.DescriptionText}>
-            {coffeeDetail?.description}
+            {mealDetail?.description}
           </Text>
         </View>
         <PaymentFooter
-          price={coffeeDetail?.price}
+          price={mealDetail?.price}
           buttonTitle="Add to Cart"
           buttonPressHandler={() => {
             addToCarthandler({
-              id: coffeeDetail?.id
+              id: mealDetail?.id
             });
           }}
         />

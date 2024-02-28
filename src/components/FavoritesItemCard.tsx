@@ -7,14 +7,8 @@ import ImageBackgroundInfo from './ImageBackgroundInfo';
 
 interface FavoritesItemCardProps {
   id: string;
-  imagelink_portrait: string;
+  imagelink_square: string;
   name: string;
-  special_ingredient: string;
-  type: string;
-  ingredients: string;
-  average_rating: number;
-  ratings_count: string;
-  roasted: string;
   description: string;
   favourite: boolean;
   toggleFavouriteItem: any;
@@ -25,18 +19,18 @@ const FavoritesItemCard: React.FC<FavoritesItemCardProps> = ({
   toggleFavouriteItem,
   favourite,
 }) => {
-  const [coffeeItem, setCoffeeItem] = useState<any>(null);
+  const [mealItem, setMealItem] = useState<any>(null);
 
   useEffect(() => {
     const fetchCoffeeItem = async () => {
       try {
         // console.log(id);
-        const response = await fetch(`${apiUrl}/api/coffee-item/${id}`); // Use id from props
+        const response = await fetch(`${apiUrl}/api/meal-item/${id}`); // Use id from props
         if (!response.ok) {
           throw new Error('Failed to fetch coffee item');
         }
         const data = await response.json();
-        setCoffeeItem(data);
+        setMealItem(data);
       } catch (error) {
         console.error(error);
         // Handle error here
@@ -48,20 +42,13 @@ const FavoritesItemCard: React.FC<FavoritesItemCardProps> = ({
 
   return (
     <View style={styles.CardContainer}>
-      {coffeeItem && (
+      {mealItem && (
         <>
           <ImageBackgroundInfo
             EnableBackHandler={false}
-            imagelink_portrait={coffeeItem.imagelink_portrait}
-            type={coffeeItem.type}
-            id={coffeeItem.id}
+            imagelink_square={mealItem.imagelink_square}
+            id={mealItem.id}
             favourite={favourite}
-            name={coffeeItem.name}
-            special_ingredient={coffeeItem.special_ingredient}
-            ingredients={coffeeItem.ingredients}
-            average_rating={coffeeItem.average_rating}
-            ratings_count={coffeeItem.ratings_count}
-            roasted={coffeeItem.roasted}
             toggleFavourite={toggleFavouriteItem}
           />
           <LinearGradient
@@ -70,7 +57,7 @@ const FavoritesItemCard: React.FC<FavoritesItemCardProps> = ({
             colors={[COLORS.primaryGreyHex, COLORS.primaryBlackHex]}
             style={styles.ContainerLinearGradient}>
             <Text style={styles.DescriptionTitle}>Description</Text>
-            <Text style={styles.DescriptionText}>{coffeeItem.description}</Text>
+            <Text style={styles.DescriptionText}>{mealItem.description}</Text>
           </LinearGradient>
         </>
       )}

@@ -25,11 +25,9 @@ interface CartItemProps {
   quantity:string,
   id: string;
   name: string;
-  imagelink_square: string;
-  special_ingredient: string;
-  roasted: string;
+  imagelink_square:String;
+  item_piece: string;
   price: any;
-  type: string;
   incrementCartItemQuantityHandler: any;
   decrementCartItemQuantityHandler: any;
 }
@@ -37,27 +35,25 @@ interface CartItemProps {
 const CartItem: React.FC<CartItemProps> = ({
   id,
   quantity,
-  name,
   imagelink_square,
-  special_ingredient,
-  roasted,
+  name,
+  item_piece,
   price,
-  type,
   incrementCartItemQuantityHandler,
   decrementCartItemQuantityHandler,
 }) => {
-  const [coffeeItem, setCoffeeItem] = useState<any>(null);
+  const [mealItem, setMealItem] = useState<any>(null);
 
   useEffect(() => {
     const fetchCoffeeItem = async () => {
       try {
         // console.log(id);
-        const response = await fetch(`${apiUrl}/api/coffee-item/${id}`); // Use id from props
+        const response = await fetch(`${apiUrl}/api/meal-item/${id}`); // Use id from props
         if (!response.ok) {
-          throw new Error('Failed to fetch coffee item');
+          throw new Error('Failed to fetch meal item');
         }
         const data = await response.json();
-        setCoffeeItem(data);
+        setMealItem(data);
       } catch (error) {
         console.error(error);
         // Handle error here
@@ -69,7 +65,7 @@ const CartItem: React.FC<CartItemProps> = ({
 
   return (
     <View>
-      {coffeeItem && (
+      {mealItem && (
         <>
         <LinearGradient
           start={{x: 0, y: 0}}
@@ -77,12 +73,12 @@ const CartItem: React.FC<CartItemProps> = ({
           colors={[COLORS.primaryGreyHex, COLORS.primaryBlackHex]}
           style={styles.CartItemLinearGradient}>
           <View style={styles.CartItemRow}>
-            <Image source={{uri: coffeeItem.imagelink_square}} style={styles.CartItemImage} />
+            <Image source={{uri: mealItem.imagelink_square}} style={styles.CartItemImage} />
             <View style={styles.CartItemInfo}>
               <View>
-                <Text style={styles.CartItemTitle}>{coffeeItem.name}</Text>
+                <Text style={styles.CartItemTitle}>{mealItem.name}</Text>
                 <Text style={styles.CartItemSubtitle}>
-                  {coffeeItem.special_ingredient}
+                  {mealItem.item_piece}
                 </Text>
               </View>
             </View>
@@ -91,7 +87,7 @@ const CartItem: React.FC<CartItemProps> = ({
               style={styles.CartItemSizeRowContainer}>
               <View style={styles.CartItemSizeValueContainer}>
                 <Text style={styles.SizeCurrency}>
-                  <Text style={styles.SizePrice}>$ {coffeeItem.price}</Text>
+                  <Text style={styles.SizePrice}>Rp. {mealItem.price}</Text>
                 </Text>
               </View>
               <View style={styles.CartItemSizeValueContainer}>

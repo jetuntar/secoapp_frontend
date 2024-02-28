@@ -90,7 +90,7 @@ const TabNavigator = () => {
         options={{
           tabBarIcon: ({focused, color, size}) => (
             <CustomIcon
-              name="setting"
+              name="close"
               size={25}
               color={
                 focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex

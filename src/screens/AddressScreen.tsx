@@ -9,6 +9,7 @@ const AddressScreen = ({ navigation }: any) => {
   const [recipient, setRecipient] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
+  const [notes, setNotes] = useState('');
   const [latitude, setLatitude] = useState<any | null>(null);
   const [longitude, setLongitude] = useState<any | null>(null);
 
@@ -25,6 +26,7 @@ const AddressScreen = ({ navigation }: any) => {
         setRecipient(firstAddress.recipient);
         setAddress(firstAddress.address);
         setPhone(firstAddress.phone);
+        setNotes(firstAddress.notes)
       }
     } catch (error) {
       console.error(error);
@@ -53,7 +55,7 @@ const AddressScreen = ({ navigation }: any) => {
       console.log(latitude)
       console.log(longitude)
       const userId = await AsyncStorage.getItem('userId');
-      const newAddress = { recipient, address, phone}; // Collect new address data
+      const newAddress = { recipient, address, phone, notes}; // Collect new address data
       const response = await fetch(`${apiUrl}/api/address/${userId}`, {
         method: "PUT",
         headers: {
@@ -94,18 +96,18 @@ const AddressScreen = ({ navigation }: any) => {
         value={recipient}
         onChangeText={(text) => setRecipient(text)} // Update recipient state
       />
-      <Text style={styles.title}>Address</Text>
-      <TextInput
-        style={styles.input}
-        value={address}
-        onChangeText={(text) => setAddress(text)} // Update address state
-      />
       <Text style={styles.title}>Phone</Text>
       <TextInput
         style={styles.input}
         value={phone}
         onChangeText={(text) => setPhone(text)} // Update phone state
         keyboardType="phone-pad"
+      />
+      <Text style={styles.title}>Address</Text>
+      <TextInput
+        style={styles.input}
+        value={address}
+        onChangeText={(text) => setAddress(text)} // Update address state
       />
       {/* 
       <Text style={styles.title}>Latitude</Text>
@@ -121,12 +123,12 @@ const AddressScreen = ({ navigation }: any) => {
         value={longitude ? longitude.toString() : ''}
         editable={false}
       /> */}
-      {/* <Text style={styles.title}>Notes:</Text>
+      <Text style={styles.title}>Notes</Text>
       <TextInput
         style={styles.input}
-        value={recipient}
-        onChangeText={(text) => setRecipient(text)} // Update notes state
-      /> */}
+        value={notes}
+        onChangeText={(text) => setNotes(text)} // Update notes state
+      />
       <View style={styles.nav}>
         <View style={styles.button}>
           <TouchableOpacity onPress={saveAddress}>
