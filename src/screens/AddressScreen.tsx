@@ -26,7 +26,7 @@ const AddressScreen = ({ navigation }: any) => {
         setRecipient(firstAddress.recipient);
         setAddress(firstAddress.address);
         setPhone(firstAddress.phone);
-        setNotes(firstAddress.notes)
+        setNotes(firstAddress.notes);
       }
     } catch (error) {
       console.error(error);
@@ -45,15 +45,61 @@ const AddressScreen = ({ navigation }: any) => {
     );
   };
 
+  // Function to convert degrees to radians
+  const toRadians = (degrees:any) => {
+    return degrees * (Math.PI / 180);
+  };
+
+  // Function to calculate distance between two coordinates using Haversine formula
+  const calculateDistance = (lat1:any, lon1:any, lat2:any, lon2:any) => {
+    const R = 6371; // Radius of the Earth in km
+
+    // Convert latitude and longitude from degrees to radians
+    const dLat = toRadians(lat2 - lat1);
+    const dLon = toRadians(lon2 - lon1);
+
+    // Convert latitudes to radians
+    lat1 = toRadians(lat1);
+    lat2 = toRadians(lat2);
+
+    // Apply Haversine formula
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    // Calculate the distance
+    const distance = R * c;
+    const roundedDistance = distance.toFixed(1);
+    const roundedDistanceNumber = parseFloat(roundedDistance);
+    return roundedDistanceNumber
+  };
+
+  const userLatitude = latitude;
+  const userLongitude = longitude;
+
+  // Store coordinates
+  const storeLatitude = -7.435137443627459;
+  const storeLongitude = 109.24898618550385;
+
+
+
   useEffect(() => {
     getCurrentLocation();
     getUserAddress();
   }, []);
 
   const saveAddress = async () => {
+    const distance = calculateDistance(
+      userLatitude,
+      userLongitude,
+      storeLatitude,
+      storeLongitude
+    );
+    console.log(distance)
     try {
       const userId = await AsyncStorage.getItem('userId');
-      const newAddress = { recipient, address, phone, notes, latitude, longitude}; // Collect new address data
+      const newAddress = { recipient, address, phone, notes, distance}; // Collect new address data
       const response = await fetch(`${apiUrl}/api/address/${userId}`, {
         method: "PUT",
         headers: {
@@ -113,7 +159,7 @@ const AddressScreen = ({ navigation }: any) => {
         value={notes}
         onChangeText={(text) => setNotes(text)} // Update notes state
       />
-      
+{/*       
       <Text style={styles.title}>Latitude</Text>
       <TextInput
         style={styles.input}
@@ -126,7 +172,7 @@ const AddressScreen = ({ navigation }: any) => {
         style={styles.input}
         value={longitude ? longitude.toString() : ''}
         editable={false}
-      />
+      /> */}
       <View style={styles.nav}>
         <View style={styles.button}>
           <TouchableOpacity onPress={saveAddress}>
