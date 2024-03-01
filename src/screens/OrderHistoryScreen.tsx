@@ -169,12 +169,7 @@ const OrderHistoryScreen = ({navigation}: any) => {
                     <OrderItemCard
                     id={itemId}
                     quantity={quantity}
-                    type={itemId.type}
                     name={itemId.name}
-                    imagelink_square={itemId.imagelink_square}
-                    special_ingredient={itemId.special_ingredient}
-                    price={itemId.prices}
-                    ItemPrice={itemId.ItemPrice}
                   />
                 </TouchableOpacity>
                 ))}

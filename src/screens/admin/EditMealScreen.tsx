@@ -1,16 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import HeaderBar from '../../components/HeaderBar'
 
-const UserScreen = () => {
+const EditMealScreen = () => {
   return (
     <View>
-      <HeaderBar/>
-      <Text>UserScreen</Text>
+      <Text>EditMealScreen</Text>
     </View>
   )
 }
 
-export default UserScreen
+export default EditMealScreen
 
 const styles = StyleSheet.create({})

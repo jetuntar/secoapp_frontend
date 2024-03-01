@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, ImageProps, Image} from 'react-native';
+import {StyleSheet, Text, View, ImageProps, Image, TouchableOpacity} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -9,27 +9,35 @@ import {
   SPACING,
 } from '../theme/theme';
 import apiUrl from '../../apiConfig';
+import BGIcon from './BGIcon';
 
-interface OrderItemCardProps {
+interface AdminOrderItemCardProps {
   id: string,
-  quantity:number,
-  name: string;
+  itemId:string;
+  quantity:number;
+  addressId:string;
+  order_status:string;
+  buttonPressHandler: any;
 }
 
-const OrderItemCard: React.FC<OrderItemCardProps> = ({
+const AdminOrderItemCard: React.FC<AdminOrderItemCardProps> = ({
   id,
+  itemId,
   quantity,
+  addressId,
+  order_status,
+  buttonPressHandler
 }) => {
 
   const [mealItem, setMealItem] = useState<any>(null);
 
   useEffect(() => {
-    const fetchCoffeeItem = async () => {
+    const fetchMealItem = async () => {
       try {
         // console.log(id);
-        const response = await fetch(`${apiUrl}/api/meal-item/${id}`); // Use id from props
+        const response = await fetch(`${apiUrl}/api/meal-item/${itemId}`); // Use id from props
         if (!response.ok) {
-          throw new Error('Failed to fetch coffee item');
+          throw new Error('Failed to fetch meal item');
         }
         const data = await response.json();
         setMealItem(data);
@@ -39,7 +47,7 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
       }
     };
 
-    fetchCoffeeItem();
+    fetchMealItem();
   }, [id]);
 
 
@@ -61,11 +69,19 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
               </View>
             </View>
             <View>
-              <Text style={styles.CardCurrency}>
-                Rp.<Text style={styles.CardPrice}>{mealItem.price}</Text>
-              </Text>
+              <TouchableOpacity
+                  onPress={() => {
+                    buttonPressHandler(id);
+                  }}>
+                  <BGIcon
+                    color={COLORS.primaryWhiteHex}
+                    name={'add'}
+                    BGColor={COLORS.primaryOrangeHex}
+                    size={FONTSIZE.size_10}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
             <View style={styles.CardTableRow}>
               <View style={styles.CardTableRow}>
                 <View style={styles.PriceBoxRight}>
@@ -178,4 +194,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrderItemCard;
+export default AdminOrderItemCard;

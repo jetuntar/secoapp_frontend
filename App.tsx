@@ -7,6 +7,8 @@ import axios from 'axios';
 import apiUrl from './apiConfig';
 import TabNavigator from './src/navigators/TabNavigator';
 import DetailsScreen from './src/screens/DetailsScreen';
+import EditMealScreen from './src/screens/admin/EditMealScreen';
+import AddMealScreen from './src/screens/admin/AddMealScreen';
 import PaymentScreen from './src/screens/PaymentScreen';
 import AddressScreen from './src/screens/AddressScreen';
 import OnboardingScreen from './src/screens/auth/OnBoardingScreen';
@@ -31,16 +33,12 @@ const App = () => {
           );
 
           if (response.data.status == 'ok') {
-            if (response.data.role == 'admin') {
-              setIsAdmin(true)
-            }
+            setIsAdmin(response.data.role === 'admin');
             setIsAuthenticated(true)
           } else {
             console.log("Token Expired")
             setIsAuthenticated(false)
           }
-        } else {
-          setIsAuthenticated(false);
         }
       } catch (error) {
         console.error('Authentication error:', error);
@@ -81,38 +79,39 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name='AdminTab' component={AdminTabNavigator}/>
+          <Stack.Screen name='AddMeal' component={AddMealScreen}/>
+          <Stack.Screen name='EditMeal' component={EditMealScreen}/>
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen
+            name="Tab"
+            component={TabNavigator}
+            options={{ animation: 'slide_from_bottom' }}
+          />
+          <Stack.Screen
+            name="Address"
+            component={AddressScreen}
+            options={{ animation: 'slide_from_bottom' }}
+          />
+          <Stack.Screen
+            name="Details"
+            component={DetailsScreen}
+            options={{ animation: 'slide_from_bottom' }}
+          />
+          <Stack.Screen
+            name="Payment"
+            component={PaymentScreen}
+            options={{ animation: 'slide_from_bottom' }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     );
   }
-  
-
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen
-          name="Tab"
-          component={TabNavigator}
-          options={{ animation: 'slide_from_bottom' }}
-        />
-        <Stack.Screen
-          name="Address"
-          component={AddressScreen}
-          options={{ animation: 'slide_from_bottom' }}
-        />
-        <Stack.Screen
-          name="Details"
-          component={DetailsScreen}
-          options={{ animation: 'slide_from_bottom' }}
-        />
-        <Stack.Screen
-          name="Payment"
-          component={PaymentScreen}
-          options={{ animation: 'slide_from_bottom' }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
 };
 
 export default App;

@@ -29,17 +29,15 @@ interface MealCardProps {
   item_piece:string;
   price: number;
   type: string;
-  buttonPressHandler: any;
 }
 
-const MealCard: React.FC<MealCardProps> = ({
+const AdminMealCard: React.FC<MealCardProps> = ({
   id,
   type,
   imagelink_square,
   name,
   item_piece,
-  price,
-  buttonPressHandler,
+  price
 }) => {
   return (
     <LinearGradient
@@ -59,24 +57,6 @@ const MealCard: React.FC<MealCardProps> = ({
         <Text style={styles.CardPriceCurrency}>
           Rp. <Text style={styles.CardPrice}>{price}</Text>
         </Text>
-        <TouchableOpacity
-          onPress={() => {
-            buttonPressHandler({
-              id,
-              type,
-              imagelink_square,
-              name,
-              item_piece,
-              prices: [{price, quantity: 1}],
-            });
-          }}>
-          <BGIcon
-            color={COLORS.primaryWhiteHex}
-            name={'add'}
-            BGColor={COLORS.primaryOrangeHex}
-            size={FONTSIZE.size_10}
-          />
-        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -86,6 +66,7 @@ const styles = StyleSheet.create({
   CardLinearGradientContainer: {
     padding: SPACING.space_15,
     borderRadius: BORDERRADIUS.radius_25,
+    margin:10
   },
   CardImageBG: {
     width: CARD_WIDTH,
@@ -139,4 +120,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MealCard;
+export default AdminMealCard;
