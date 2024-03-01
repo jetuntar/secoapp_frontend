@@ -52,10 +52,8 @@ const AddressScreen = ({ navigation }: any) => {
 
   const saveAddress = async () => {
     try {
-      console.log(latitude)
-      console.log(longitude)
       const userId = await AsyncStorage.getItem('userId');
-      const newAddress = { recipient, address, phone, notes}; // Collect new address data
+      const newAddress = { recipient, address, phone, notes, latitude, longitude}; // Collect new address data
       const response = await fetch(`${apiUrl}/api/address/${userId}`, {
         method: "PUT",
         headers: {
@@ -109,7 +107,13 @@ const AddressScreen = ({ navigation }: any) => {
         value={address}
         onChangeText={(text) => setAddress(text)} // Update address state
       />
-      {/* 
+      <Text style={styles.title}>Notes</Text>
+      <TextInput
+        style={styles.input}
+        value={notes}
+        onChangeText={(text) => setNotes(text)} // Update notes state
+      />
+      
       <Text style={styles.title}>Latitude</Text>
       <TextInput
         style={styles.input}
@@ -122,12 +126,6 @@ const AddressScreen = ({ navigation }: any) => {
         style={styles.input}
         value={longitude ? longitude.toString() : ''}
         editable={false}
-      /> */}
-      <Text style={styles.title}>Notes</Text>
-      <TextInput
-        style={styles.input}
-        value={notes}
-        onChangeText={(text) => setNotes(text)} // Update notes state
       />
       <View style={styles.nav}>
         <View style={styles.button}>

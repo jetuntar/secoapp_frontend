@@ -71,14 +71,14 @@ const AdminMealsScreen = ({navigation}:any) => {
         });
       }}>
        <AdminMealCard
-                id={item.id}
-                item_piece={item.item_piece}
-                type={item.type}
-                imagelink_square={item.imagelink_square}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-              />
+          id={item.id}
+          item_piece={item.item_piece}
+          type={item.type}
+          imagelink_square={item.imagelink_square}
+          name={item.name}
+          description={item.description}
+          price={item.price}
+        />
     </TouchableOpacity>
   );
 
