@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TextInput, TouchableOpacity, Alert, StyleSheet, Text, Image, ImageBackground, AppState, Button } from 'react-native';
 import axios, { AxiosResponse } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,10 +7,42 @@ import LinearGradient from "react-native-linear-gradient"
 import RegisterScreen from './RegisterScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
+const googleLogo = require('../../assets/app_images/googlelogo.jpg');
+const whatsapplogo = require('../../assets/app_images/whatsapp.png');
+const line = require('../../assets/app_images/line.png');
+const display = require('../../assets/app_images/display.png');
 const displaystart = require('../../assets/app_images/displaystart.png');
 
-const OnboardingScreen = ({navigation}: any) => {
+const OnBoardingScreen =  ({ navigation }: any) => {
+  const handleGetStarted = async () => {
+    try {
+      await AsyncStorage.setItem('@viewedOnboarding', 'true');
+      // Ganti 'Home' dengan route halaman utama atau login yang sebenarnya
+      navigation.navigate('Register');
+    } catch (error) {
+      console.log('Error @handleGetStarted: ', error);
+    }
+  };
 
+  useEffect(() => {
+    const checkOnboarding = async () => {
+      try {
+        const value = await AsyncStorage.getItem('@viewedOnboarding');
+        if(value !== null) {
+          // Pengguna sudah melihat onboarding, navigasikan ke halaman utama atau login
+          navigation.navigate('Login'); // Sesuaikan dengan route Anda
+        } else {
+          // Pengguna belum melihat onboarding, biarkan di onboarding screen atau navigasikan ke sana
+          navigation.navigate('OnBoard'); // Atau biarkan di screen ini jika sudah merupakan onboarding screen
+        }
+      } catch(error) {
+        console.log('Error @checkOnboarding: ', error);
+      }
+    };
+  
+    checkOnboarding();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -24,7 +56,7 @@ const OnboardingScreen = ({navigation}: any) => {
       <Text style={styles.subText}>Designed to help you manage your meal</Text>
       <Text style={styles.subTextsub}>supply easily and efficiently.</Text>
       <View style={[styles.button, styles.androidShadow]}>
-        <TouchableOpacity  onPress={()=>navigation.push('Register')}>
+        <TouchableOpacity  onPress={handleGetStarted}>
           <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
       </View>
@@ -39,7 +71,7 @@ const OnboardingScreen = ({navigation}: any) => {
   );
 };
 
-export default OnboardingScreen;
+export default OnBoardingScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -28,6 +28,8 @@ interface Address {
   phone: string;
   recipient: string;
   userId: number;
+  distance: number;
+  notes:string;
 }
 
 interface CartItem {
@@ -42,6 +44,8 @@ const CartScreen = ({navigation}:any) => {
   const [cartPrice, setCartPrice] = useState<CartItem[]>([])
   const [itemDetails, setItemDetails] = useState<any>([])
   const [addressUser, setAddressUser] = useState<Address[]>([])
+  const [totalPriceWithDelivery, setTotalPriceWithDelivery] = useState<number>(0);
+  const [deliveryCost, setDeliveryCost] = useState<number>(0);
 
   
 
@@ -83,7 +87,7 @@ const CartScreen = ({navigation}:any) => {
       throw error;
     }
   };
-  
+
   const calculateTotalPrice = (itemDetails: any[], cartList: CartItem[]) => {
     try {
       const totalPriceCart = itemDetails.reduce((acc, item, index) => {
@@ -91,6 +95,24 @@ const CartScreen = ({navigation}:any) => {
         return acc + totalPriceItem;
       }, 0);
       return totalPriceCart;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const calculateTotalPriceWithDeliveryCost = (itemDetails: any[], cartList: CartItem[], addressUser: Address[]) => {
+    try {
+      // Calculate total price of items
+      const totalPriceCart = calculateTotalPrice(itemDetails, cartList);
+  
+      // Calculate delivery cost
+      const deliveryCost = addressUser.length > 0 ? addressUser[0].distance * 1000 : 0;
+  
+      // Sum total price and delivery cost
+      const totalPriceWithDelivery = totalPriceCart + deliveryCost;
+  
+      return { totalPriceWithDelivery: totalPriceCart + deliveryCost, deliveryCost };
     } catch (error) {
       console.error(error);
       throw error;
@@ -118,10 +140,10 @@ const CartScreen = ({navigation}:any) => {
       const { data } = await getUserCartItem();
       const itemDetails = await getItemDetails(data);
       setItemDetails(itemDetails);
-      const totalPriceCart = calculateTotalPrice(itemDetails, data);
-      setCartPrice(totalPriceCart);
+      const { totalPriceWithDelivery, deliveryCost } = calculateTotalPriceWithDeliveryCost(itemDetails, data, addressUser);
+      setTotalPriceWithDelivery(totalPriceWithDelivery);
+      setDeliveryCost(deliveryCost);
       getUserAddress();
-      // console.log(addressUser);
     } catch (error) {
       console.error(error);
       // Handle error here, e.g., show error message to user
@@ -166,6 +188,8 @@ const CartScreen = ({navigation}:any) => {
     decrementItem(id);
   };
 
+  
+
   let currentDate = new Date();
   let year = currentDate.getFullYear();
   let month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
@@ -185,16 +209,27 @@ const CartScreen = ({navigation}:any) => {
     const basicAuth = `Basic ${encodedSecret}`
     const checkoutUrl = 'https://api.sandbox.midtrans.com'
 
+    const { totalPriceWithDelivery, deliveryCost } = calculateTotalPriceWithDeliveryCost(itemDetails, cartList, addressUser);
+    
+
     let paydata = {
-      item_details: itemDetails.map((item: { id: any; name: any; price: any; }, index: number) => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        quantity: cartList[index]?.quantity || 0
-      })),
+      item_details: [
+        ...itemDetails.map((item: { id: any; name: any; price: any; }, index: number) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: cartList[index]?.quantity || 0
+        })),
+        // Include delivery cost as a separate item
+        {
+          name: 'Delivery Cost',
+          price: deliveryCost,
+          quantity: 1
+        }
+      ],
       transaction_details: {
         order_id: `ORDER-${Math.floor(Math.random() * 1000000)}`,
-        gross_amount: cartPrice
+        gross_amount: totalPriceWithDelivery // Use the total gross amount
       }
     };
 
@@ -233,7 +268,7 @@ const CartScreen = ({navigation}:any) => {
 
         const paymentLink = await response.json()
         let payment_url = paymentLink.payment_url
-        console.log(payment_url)
+        console.log(paymentLink)
         Linking.openURL(payment_url)
         .then((supported) => {
           if (!supported) {
@@ -324,7 +359,7 @@ const CartScreen = ({navigation}:any) => {
             <PaymentFooter
               buttonPressHandler={checkoutHandler}
               buttonTitle="Checkout"
-              price={cartPrice}
+              price={totalPriceWithDelivery}
             />
           ) : (
             <></>
