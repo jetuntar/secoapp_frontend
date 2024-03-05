@@ -31,6 +31,7 @@ import { Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import MealCard from '../components/MealCard';
+import PromoCard from '../components/PromoCard';
 
 const getCategoriesFromData = (data: any) => {
   let temp: any = {};
@@ -75,6 +76,13 @@ interface Address {
 }
 
 const HomeScreen = ({navigation}: any) => {
+  const [mealData, setMealData] = useState<MealDataItem[]>([]);
+  const [sortedMeal, setSortedMeal] = useState<MealDataItem[]>(mealData);
+  const [searchedText, setSearchedText] = useState<string>('');
+  const [addressUser, setAddressUser] = useState<Address[]>([]);
+  const [promoData, setPromoData] = useState<any[]>([]);
+
+
   const CoffeeList = useStore((state: any) => state.CoffeeList);
   const addToCart = useStore((state: any) => state.addToCart);
   const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
@@ -94,29 +102,32 @@ const HomeScreen = ({navigation}: any) => {
   const ListRef: any = useRef<FlatList>();
   const tabBarHeight = useBottomTabBarHeight();
 
-  const searchCoffee = (search: string) => {
-    if (search != '') {
+  const searchMeal = (search: string) => {
+    setSearchedText(search);
+    if (search !== '') {
       ListRef?.current?.scrollToOffset({
         animated: true,
         offset: 0,
       });
-      setCategoryIndex({index: 0, category: categories[0]});
-      setSortedCoffee([
-        ...CoffeeList.filter((item: any) =>
-          item.name.toLowerCase().includes(search.toLowerCase()),
-        ),
-      ]);
+      setSortedMeal(
+        mealData.filter((item: MealDataItem) =>
+          item.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    } else {
+      // If search text is empty, show all items
+      setSortedMeal(mealData);
     }
   };
-
-  const resetSearchCoffee = () => {
+  
+  const resetSearchMeal = () => {
     ListRef?.current?.scrollToOffset({
       animated: true,
       offset: 0,
     });
-    setCategoryIndex({index: 0, category: categories[0]});
-    setSortedCoffee([...CoffeeList]);
     setSearchText('');
+    setSearchedText('');
+    setSortedMeal(mealData);
   };
 
   const CoffeCardAddToCart = ({
@@ -147,8 +158,7 @@ const HomeScreen = ({navigation}: any) => {
     );
   };
 
-  const [mealData, setMealData] = useState<MealDataItem[]>([]);
-  const [addressUser, setAddressUser] = useState<Address[]>([]);
+
 
   const getItems =  async () => {
     try {
@@ -176,9 +186,21 @@ const HomeScreen = ({navigation}: any) => {
     }
   }
 
+  const getPromo = async () => {
+    try {
+      const promos = await fetch(`${apiUrl}/api/all-promo`)
+      const data = await promos.json();
+      setPromoData(data)
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   useFocusEffect(
     React.useCallback(() => {
       // Function to refresh the screen, such as refetching data
+      getPromo();
       getItems();
       getUserAddress();
     }, [])
@@ -234,7 +256,7 @@ const HomeScreen = ({navigation}: any) => {
         <View style={styles.InputContainerComponent}>
           <TouchableOpacity
             onPress={() => {
-              searchCoffee(searchText);
+              searchMeal(searchText);
             }}>
             <CustomIcon
               style={styles.InputIcon}
@@ -252,7 +274,7 @@ const HomeScreen = ({navigation}: any) => {
             value={searchText}
             onChangeText={text => {
               setSearchText(text);
-              searchCoffee(text);
+              searchMeal(text);
             }}
             placeholderTextColor={COLORS.primaryLightGreyHex}
             style={styles.TextInputContainer}
@@ -260,7 +282,7 @@ const HomeScreen = ({navigation}: any) => {
           {searchText.length > 0 ? (
             <TouchableOpacity
               onPress={() => {
-                resetSearchCoffee();
+                resetSearchMeal();
               }}>
               <CustomIcon
                 style={styles.InputIcon}
@@ -273,19 +295,55 @@ const HomeScreen = ({navigation}: any) => {
             <></>
           )}
         </View>
+
+        {/* Promo Flatlist */}
+
+        <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.PromoFlatlistContainer}
+        data={promoData}
+        keyExtractor={item => item.id.toString()}
+        renderItem={({item}) => (
+          <PromoCard
+          id={item.id}
+          imagelink={item.imagelink}
+          />
+        )}
+        />
+
+        {/* Type Meal Button */}
+
+        <View style={styles.TypeContainer}>
+          <View style={styles.TypeInnerContainer}>
+            <TouchableOpacity style={styles.TypeButtonContainer} onPress={() => navigation.navigate('Type', {type: 'rf'})}>
+              <Text style={styles.TypeText}>
+                Raw Food
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.TypeInnerContainer}>
+          <TouchableOpacity style={styles.TypeButtonContainer} onPress={() => navigation.navigate('Type', {type: 'hc'})}>
+              <Text style={styles.TypeText}>
+                Half-Cooked
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <Text style={styles.MealTitle}>Today's Meal</Text>
         
         {/* Meal Flatlist */}
 
         <FlatList
-          horizontal
           ListEmptyComponent={
             <View style={styles.EmptyListContainer}>
               <Text style={styles.CategoryText}>No Meal Available</Text>
             </View>
           }
-          showsHorizontalScrollIndicator={false}
-          data={mealData}
-          contentContainerStyle={styles.FlatListContainer}
+          numColumns={2}
+          data={searchedText !== '' ? sortedMeal : mealData}
+          contentContainerStyle={styles.MealFlatListContainer}
           keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -353,10 +411,38 @@ const styles = StyleSheet.create({
     color: COLORS.primaryLightGreyHex,
     marginBottom: SPACING.space_4,
   },
-  FlatListContainer: {
-    gap: SPACING.space_20,
-    paddingVertical: SPACING.space_20,
-    paddingHorizontal: SPACING.space_30,
+  TypeContainer: {
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignSelf:'center',
+    width:340,
+    height:60,
+  },
+  TypeInnerContainer: {
+    borderRadius:BORDERRADIUS.radius_10,
+    width:160,
+    height:60,
+    backgroundColor:'white',
+    justifyContent:'center'
+  },
+  TypeButtonContainer: {
+    alignSelf:'center'
+  },
+  TypeText: {
+    fontFamily: FONTFAMILY.poppins_medium,
+    fontSize: FONTSIZE.size_18,
+    color: COLORS.primaryBlackHex,
+  },
+  PromoFlatlistContainer: {
+    marginVertical:16,
+    gap:30
+  },
+  MealFlatListContainer: {
+    marginVertical:16,
+    marginBottom:85,
+    alignSelf:'center',
+    alignItems:'center',
+    rowGap:10
   },
   EmptyListContainer: {
     width: Dimensions.get('window').width - SPACING.space_30 * 2,
@@ -364,10 +450,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: SPACING.space_36 * 3.6,
   },
-  CoffeeBeansTitle: {
+  MealTitle: {
+    marginLeft: 36,
     fontSize: FONTSIZE.size_18,
-    marginLeft: SPACING.space_30,
-    marginTop: SPACING.space_20,
+    marginTop: 16,
     fontFamily: FONTFAMILY.poppins_medium,
     color: COLORS.secondaryLightGreyHex,
   },

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Image} fro
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiUrl from '../../apiConfig';
 import { COLORS, SPACING } from '../theme/theme';
-import Geolocation from '@react-native-community/geolocation';
+import GetLocation from 'react-native-get-location';
 
 const AddressScreen = ({ navigation }: any) => {
   const [recipient, setRecipient] = useState('');
@@ -34,16 +34,21 @@ const AddressScreen = ({ navigation }: any) => {
   };
 
   const getCurrentLocation = () => {
-    Geolocation.getCurrentPosition(
-      position => {
-        const { latitude, longitude } = position.coords;
-        setLatitude(latitude);
-        setLongitude(longitude);
-      },
-      error => console.log(error),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-  };
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 60000,
+  })
+  .then(location => {
+    const { latitude, longitude } = location;
+    setLatitude(latitude);
+    setLongitude(longitude);
+    console.log(longitude);
+  })
+  .catch(error => {
+      const { code, message } = error;
+      console.warn(code, message);
+  })
+  }
 
   // Function to convert degrees to radians
   const toRadians = (degrees:any) => {

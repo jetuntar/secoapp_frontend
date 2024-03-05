@@ -13,6 +13,7 @@ import PaymentScreen from './src/screens/PaymentScreen';
 import AddressScreen from './src/screens/AddressScreen';
 import OnboardingScreen from './src/screens/auth/OnBoardingScreen';
 import AdminTabNavigator from './src/navigators/AdminTabNavigator';
+import TypeMealScreen from './src/screens/TypeMealScreen';
 import LoginScreen from './src/screens/auth/LoginScreen'; // Import your LoginScreen component
 import RegisterScreen from './src/screens/auth/RegisterScreen'; // Import your RegisterScreen component
 
@@ -96,6 +97,11 @@ const App = () => {
           <Stack.Screen
             name="Address"
             component={AddressScreen}
+            options={{ animation: 'slide_from_bottom' }}
+          />
+          <Stack.Screen
+            name="Type"
+            component={TypeMealScreen}
             options={{ animation: 'slide_from_bottom' }}
           />
           <Stack.Screen

@@ -67,7 +67,8 @@ const MealCard: React.FC<MealCardProps> = ({
               imagelink_square,
               name,
               item_piece,
-              prices: [{price, quantity: 1}],
+              price,
+              quantity:1
             });
           }}>
           <BGIcon
@@ -86,6 +87,7 @@ const styles = StyleSheet.create({
   CardLinearGradientContainer: {
     padding: SPACING.space_15,
     borderRadius: BORDERRADIUS.radius_25,
+    marginHorizontal:10
   },
   CardImageBG: {
     width: CARD_WIDTH,

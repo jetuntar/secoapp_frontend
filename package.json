@@ -30,6 +30,7 @@
     "react-native-alert-notification": "^0.4.0",
     "react-native-drawer": "^2.5.1",
     "react-native-feather": "^1.1.2",
+    "react-native-get-location": "^4.0.1",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-maps": "^1.10.3",
     "react-native-reanimated": "^3.6.2",
