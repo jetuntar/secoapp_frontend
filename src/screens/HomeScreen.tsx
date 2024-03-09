@@ -84,7 +84,7 @@ const HomeScreen = ({navigation}: any) => {
 
 
   const CoffeeList = useStore((state: any) => state.CoffeeList);
-  const addToCart = useStore((state: any) => state.addToCart);
+  // const addToCart = useStore((state: any) => state.addToCart);
   const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
 
   const [categories, setCategories] = useState(
@@ -130,33 +130,33 @@ const HomeScreen = ({navigation}: any) => {
     setSortedMeal(mealData);
   };
 
-  const CoffeCardAddToCart = ({
-    id,
-    index,
-    name,
-    roasted,
-    imagelink_square,
-    special_ingredient,
-    type,
-    prices,
-  }: any) => {
-    addToCart({
-      id,
-      index,
-      name,
-      roasted,
-      imagelink_square,
-      special_ingredient,
-      type,
-      prices,
-    });
-    calculateCartPrice();
-    ToastAndroid.showWithGravity(
-      `${name} is Added to Cart`,
-      ToastAndroid.SHORT,
-      ToastAndroid.CENTER,
-    );
-  };
+  // const CoffeCardAddToCart = ({
+  //   id,
+  //   index,
+  //   name,
+  //   roasted,
+  //   imagelink_square,
+  //   special_ingredient,
+  //   type,
+  //   prices,
+  // }: any) => {
+  //   addToCart({
+  //     id,
+  //     index,
+  //     name,
+  //     roasted,
+  //     imagelink_square,
+  //     special_ingredient,
+  //     type,
+  //     prices,
+  //   });
+  //   calculateCartPrice();
+  //   ToastAndroid.showWithGravity(
+  //     `${name} is Added to Cart`,
+  //     ToastAndroid.SHORT,
+  //     ToastAndroid.CENTER,
+  //   );
+  // };
 
 
 
@@ -195,7 +195,32 @@ const HomeScreen = ({navigation}: any) => {
       console.error(error);
       throw error;
     }
-  }
+  };
+
+  const addToCart = async (
+    id: string,
+    name: string
+    ) => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      await axios.put(
+        `${apiUrl}/api/increment-item-cart/${userId}/${id}`
+      );
+    } catch (error) {
+      console.error('Failed to remove from favorites', error);
+    }
+  };
+
+  const addToCarthandler = ({
+    id,name
+  }: any) => {
+    addToCart(id, name);
+    ToastAndroid.showWithGravity(
+      `${name} is Added to Cart`,
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER,
+    );
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -362,7 +387,12 @@ const HomeScreen = ({navigation}: any) => {
                 name={item.name}
                 description={item.description}
                 price={item.price}
-                buttonPressHandler={undefined}
+                buttonPressHandler={() => {
+                  addToCarthandler({
+                    id: item.id,
+                    name:item.name
+                  })
+                }}
               />
             </TouchableOpacity>
           )}
