@@ -3,9 +3,10 @@ import {StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {COLORS} from '../theme/theme';
 import {BlurView} from '@react-native-community/blur';
-import AdminMealsScreen from '../screens/admin/AdminMealsScreen';
-import AdminOrderScreen from '../screens/admin/AdminOrderScreen';
+import AdminMealsScreen from '../screens/admin/MealsScreen/AdminMealsScreen';
+import AdminOrderScreen from '../screens/admin/OrderScreen/AdminOrderScreen';
 import CustomIcon from '../components/CustomIcon';
+import AdminPromoScreen from '../screens/admin/PromoScreen/AdminPromoScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,6 +43,20 @@ const AdminTabNavigator = () => {
           <Tab.Screen
             name="User"
             component={AdminMealsScreen}
+            options={{
+              tabBarIcon: ({focused, color, size}) => (
+                <CustomIcon
+                  name="menu"
+                  size={25}
+                  color={
+                    focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
+                  }
+                />
+              ),
+            }}></Tab.Screen>
+            <Tab.Screen
+            name="Promo"
+            component={AdminPromoScreen}
             options={{
               tabBarIcon: ({focused, color, size}) => (
                 <CustomIcon

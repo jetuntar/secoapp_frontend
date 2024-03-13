@@ -12,9 +12,12 @@ import apiUrl from '../../apiConfig';
 import BGIcon from './BGIcon';
 
 interface AdminOrderItemCardProps {
-  id: string,
+  id: string;
+  imagelink_square:string;
   itemId:string;
   quantity:number;
+  name:string;
+  price:number;
   addressId:string;
   order_status:string;
   buttonPressHandler: any;
@@ -23,38 +26,18 @@ interface AdminOrderItemCardProps {
 const AdminOrderItemCard: React.FC<AdminOrderItemCardProps> = ({
   id,
   itemId,
+  imagelink_square,
   quantity,
+  name,
+  price,
   addressId,
   order_status,
   buttonPressHandler
 }) => {
 
-  const [mealItem, setMealItem] = useState<any>(null);
-
-  useEffect(() => {
-    const fetchMealItem = async () => {
-      try {
-        // console.log(id);
-        const response = await fetch(`${apiUrl}/api/meal-item/${itemId}`); // Use id from props
-        if (!response.ok) {
-          throw new Error('Failed to fetch meal item');
-        }
-        const data = await response.json();
-        setMealItem(data);
-      } catch (error) {
-        console.error(error);
-        // Handle error here
-      }
-    };
-
-    fetchMealItem();
-  }, [id]);
-
 
   return (
     <View>
-      {mealItem && (
-        <>
         <LinearGradient
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
@@ -62,10 +45,10 @@ const AdminOrderItemCard: React.FC<AdminOrderItemCardProps> = ({
           style={styles.CardLinearGradient}>
           <View style={styles.CardInfoContainer}>
             <View style={styles.CardImageInfoContainer}>
-              <Image source={{uri: mealItem.imagelink_square}} style={styles.Image} />
+              <Image source={{uri: imagelink_square}} style={styles.Image} />
               <View>
-                <Text style={styles.CardTitle}>{mealItem.name}</Text>
-                <Text style={styles.CardSubtitle}>{mealItem.special_ingredient}</Text>
+                <Text style={styles.CardTitle}>{name}</Text>
+                {/* <Text style={styles.CardSubtitle}>{mealItem.item_piece}</Text> */}
               </View>
             </View>
             <View>
@@ -86,7 +69,7 @@ const AdminOrderItemCard: React.FC<AdminOrderItemCardProps> = ({
               <View style={styles.CardTableRow}>
                 <View style={styles.PriceBoxRight}>
                   <Text style={styles.PriceCurrency}>
-                    Rp.<Text style={styles.Price}> {mealItem.price}</Text>
+                    Rp.<Text style={styles.Price}> {price}</Text>
                   </Text>
                 </View>
               </View>
@@ -96,13 +79,11 @@ const AdminOrderItemCard: React.FC<AdminOrderItemCardProps> = ({
                   X <Text style={styles.Price}>{quantity}</Text>
                 </Text>
                 <Text style={styles.CardQuantityPriceText}>
-                  Rp. {(quantity * mealItem.price).toFixed(2).toString()}
+                  Rp. {(quantity * price).toFixed(2).toString()}
                 </Text>
               </View>
             </View>
         </LinearGradient>
-        </>
-      )}
     </View>
   );
 };

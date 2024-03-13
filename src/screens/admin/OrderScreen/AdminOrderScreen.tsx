@@ -14,26 +14,32 @@ import {
   FONTFAMILY,
   FONTSIZE,
   SPACING,
-} from '../../theme/theme';
-import EmptyListAnimation from '../../components/EmptyListAnimation';
-import PopUpAnimation from '../../components/PopUpAnimation';
+} from '../../../theme/theme';
+import EmptyListAnimation from '../../../components/EmptyListAnimation';
+import PopUpAnimation from '../../../components/PopUpAnimation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import apiUrl from '../../../apiConfig';
+import apiUrl from '../../../../apiConfig';
 import { useFocusEffect } from '@react-navigation/native';
-import AdminOrderItemCard from '../../components/AdminOrderItemCard';
+import AdminOrderItemCard from '../../../components/AdminOrderItemCard';
 import axios from 'axios';
-import HeaderBar from '../../components/HeaderBar';
+import HeaderBar from '../../../components/HeaderBar';
 
+interface Address {
+  id:string;
+  userId:string;
+  recipient:string;
+  address:string;
+  phone:string;
+  notes:string;
+  distance:string
+}
 
 
 const AdminOrderScreen = ({navigation}:any) => {
   const tabBarHeight = useBottomTabBarHeight();
 
   const [orderList, setOrderList] = useState<any[]>([])
-  const [itemList, setItemList] = useState<any[]>([])
-  const [itemDetails, setItemDetails] = useState<any>([])
 
-  
   const getOrderItems = async () => {
     try {
       const response = await fetch(`${apiUrl}/api/get-orders-ongoing`);
@@ -42,11 +48,6 @@ const AdminOrderScreen = ({navigation}:any) => {
       }
       const data = await response.json();
       setOrderList(data);
-      const itemIds = data.map(({id, itemId, quantity, addressId}: any) => {
-        return {id, itemId, quantity, addressId};
-      });
-      setItemList(itemIds);
-      return { data, itemIds };
     } catch (error) {
       console.error(error);
       throw error;
@@ -71,9 +72,7 @@ const AdminOrderScreen = ({navigation}:any) => {
   const fetchOrder = async () => {
     try {
       getOrderItems();
-      setItemDetails(itemDetails);
       // getUserAddress();
-      // console.log(orderList);
     } catch (error) {
       console.error(error);
       // Handle error here, e.g., show error message to user
@@ -118,16 +117,19 @@ const AdminOrderScreen = ({navigation}:any) => {
               <EmptyListAnimation title={'No Orders'} />
             ) : (
               <View style={styles.ListItemContainer}>
-                {itemList.map(({id, itemId, quantity}: any) => (
+                {orderList.map(({id, itemId, quantity, addressId, order_status, Address, MealItem}: any) => (
                   <TouchableOpacity
-                  onPress={() => console.log(id)}
+                  onPress={() => console.log(Address)}  
                   key={itemId}>
                     <AdminOrderItemCard
                     id={id}
+                    imagelink_square={MealItem.imagelink_square}
                     itemId={itemId}
-                    addressId={itemId.addressId}
+                    addressId={addressId}
                     quantity={quantity}
-                    order_status={itemId.order_status}
+                    name={MealItem.name}
+                    price={MealItem.price}
+                    order_status={order_status}
                     buttonPressHandler={finishOrderHandler}
                   />
                   </TouchableOpacity>

@@ -11,14 +11,19 @@ import {
 import apiUrl from '../../apiConfig';
 
 interface OrderItemCardProps {
-  id: string,
-  quantity:number,
+  id: string;
+  imagelink_square:string;
+  price:number;
+  quantity:number;
   name: string;
 }
 
 const OrderItemCard: React.FC<OrderItemCardProps> = ({
   id,
+  imagelink_square,
+  price,
   quantity,
+  name
 }) => {
 
   const [mealItem, setMealItem] = useState<any>(null);
@@ -54,15 +59,15 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
           style={styles.CardLinearGradient}>
           <View style={styles.CardInfoContainer}>
             <View style={styles.CardImageInfoContainer}>
-              <Image source={{uri: mealItem.imagelink_square}} style={styles.Image} />
+              <Image source={{uri: imagelink_square}} style={styles.Image} />
               <View>
-                <Text style={styles.CardTitle}>{mealItem.name}</Text>
-                <Text style={styles.CardSubtitle}>{mealItem.special_ingredient}</Text>
+                <Text style={styles.CardTitle}>{name}</Text>
+                {/* <Text style={styles.CardSubtitle}>{special_ingredient}</Text> */}
               </View>
             </View>
             <View>
               <Text style={styles.CardCurrency}>
-                Rp.<Text style={styles.CardPrice}>{mealItem.price}</Text>
+                Rp.<Text style={styles.CardPrice}>{price}</Text>
               </Text>
             </View>
           </View>
@@ -70,7 +75,7 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
               <View style={styles.CardTableRow}>
                 <View style={styles.PriceBoxRight}>
                   <Text style={styles.PriceCurrency}>
-                    Rp.<Text style={styles.Price}> {mealItem.price}</Text>
+                    Rp.<Text style={styles.Price}> {price}</Text>
                   </Text>
                 </View>
               </View>
@@ -80,7 +85,7 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
                   X <Text style={styles.Price}>{quantity}</Text>
                 </Text>
                 <Text style={styles.CardQuantityPriceText}>
-                  Rp. {(quantity * mealItem.price).toFixed(2).toString()}
+                  Rp. {(quantity * price).toFixed(2).toString()}
                 </Text>
               </View>
             </View>

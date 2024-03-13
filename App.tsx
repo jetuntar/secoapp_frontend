@@ -7,8 +7,8 @@ import axios from 'axios';
 import apiUrl from './apiConfig';
 import TabNavigator from './src/navigators/TabNavigator';
 import DetailsScreen from './src/screens/DetailsScreen';
-import EditMealScreen from './src/screens/admin/EditMealScreen';
-import AddMealScreen from './src/screens/admin/AddMealScreen';
+import EditMealScreen from './src/screens/admin/MealsScreen/EditMealScreen';
+import AddMealScreen from './src/screens/admin/MealsScreen/AddMealScreen';
 import PaymentScreen from './src/screens/PaymentScreen';
 import AddressScreen from './src/screens/AddressScreen';
 import OnboardingScreen from './src/screens/auth/OnBoardingScreen';
@@ -16,6 +16,7 @@ import AdminTabNavigator from './src/navigators/AdminTabNavigator';
 import TypeMealScreen from './src/screens/TypeMealScreen';
 import LoginScreen from './src/screens/auth/LoginScreen'; // Import your LoginScreen component
 import RegisterScreen from './src/screens/auth/RegisterScreen'; // Import your RegisterScreen component
+import AddPromoScreen from './src/screens/admin/PromoScreen/AddPromoScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -82,6 +83,7 @@ const App = () => {
           <Stack.Screen name='AdminTab' component={AdminTabNavigator}/>
           <Stack.Screen name='AddMeal' component={AddMealScreen}/>
           <Stack.Screen name='EditMeal' component={EditMealScreen}/>
+          <Stack.Screen name='AddPromo' component={AddPromoScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     );

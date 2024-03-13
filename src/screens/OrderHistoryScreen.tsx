@@ -44,15 +44,6 @@ const OrderHistoryScreen = ({navigation}: any) => {
   const [showAnimation, setShowAnimation] = useState(false);
 
   const [orderList, setOrderList] = useState<any[]>([])
-  const [itemList, setItemList] = useState<any[]>([])
-  const [itemDetails, setItemDetails] = useState<any>([])
-  const [addressUser, setAddressUser] = useState<Address[]>([])
-
-  const navigationHandler = ({id}: any) => {
-    navigation.push('Details', {
-      id
-    });
-  };
 
   const getUserOrderItem = async () => {
     try {
@@ -63,45 +54,6 @@ const OrderHistoryScreen = ({navigation}: any) => {
       }
       const data = await response.json();
       setOrderList(data);
-      const itemIds = data.map(({ itemId, quantity}: any) => {
-        return { itemId, quantity};
-      });
-      setItemList(itemIds);
-      return { data, itemIds };
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  const getItemDetails = async (data: CartItem[]) => {
-    try {
-      const itemDetails = await Promise.all(
-        data.map(async ({ itemId }: any) => {
-          const priceResponse = await fetch(`${apiUrl}/api/meal-item/${itemId}`);
-          if (!priceResponse.ok) {
-            throw new Error('Failed to fetch item price');
-          }
-          const itemData = await priceResponse.json();
-          return itemData;
-        })
-      );
-      return itemDetails;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  const getUserAddress = async () => {
-    try {
-      const userId = await AsyncStorage.getItem('userId');
-      const response = await fetch(`${apiUrl}/api/get-address/${userId}`)
-      if (!response.ok) {
-        throw new Error('Failed to fetch carts');
-      }
-      const data = await response.json();
-      setAddressUser(data);
     } catch (error) {
       console.error(error);
       throw error;
@@ -111,11 +63,7 @@ const OrderHistoryScreen = ({navigation}: any) => {
   
   const fetchOrder = async () => {
     try {
-      const { data } = await getUserOrderItem();
-      const itemDetails = await getItemDetails(data);
-      setItemDetails(itemDetails);
-      getUserAddress();
-      // console.log(addressUser);
+      getUserOrderItem();
     } catch (error) {
       console.error(error);
       // Handle error here, e.g., show error message to user
@@ -159,7 +107,7 @@ const OrderHistoryScreen = ({navigation}: any) => {
               <EmptyListAnimation title={'No Order History'} />
             ) : (
               <View style={styles.ListItemContainer}>
-                {itemList.map(({itemId, quantity}: any) => (
+                {orderList.map(({itemId, quantity, MealItem, Address}: any) => (
                   <TouchableOpacity onPress={() => {
                     navigation.push('Details', {
                       id: itemId,
@@ -169,24 +117,15 @@ const OrderHistoryScreen = ({navigation}: any) => {
                     <OrderItemCard
                     id={itemId}
                     quantity={quantity}
-                    name={itemId.name}
+                    imagelink_square={MealItem.imagelink_square}
+                    price={MealItem.price}
+                    name={MealItem.name}
                   />
                 </TouchableOpacity>
                 ))}
               </View>
             )}
           </View>
-          {/* {OrderHistoryList.length > 0 ? (
-            <TouchableOpacity
-              style={styles.DownloadButton}
-              onPress={() => {
-                buttonPressHandler();
-              }}>
-              <Text style={styles.ButtonText}>Download</Text>
-            </TouchableOpacity>
-          ) : (
-            <></>
-          )} */}
         </View>
       </ScrollView>
     </View>

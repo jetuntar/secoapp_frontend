@@ -42,7 +42,7 @@ const AddressScreen = ({ navigation }: any) => {
     const { latitude, longitude } = location;
     setLatitude(latitude);
     setLongitude(longitude);
-    console.log(longitude);
+    console.log([latitude,longitude]);
   })
   .catch(error => {
       const { code, message } = error;

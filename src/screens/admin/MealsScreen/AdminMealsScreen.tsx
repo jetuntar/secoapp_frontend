@@ -17,19 +17,19 @@ import {
   FONTFAMILY,
   FONTSIZE,
   SPACING,
-} from '../../theme/theme';
-import HeaderBar from '../../components/HeaderBar';
-import CustomIcon from '../../components/CustomIcon';
+} from '../../../theme/theme';
+import HeaderBar from '../../../components/HeaderBar';
+import CustomIcon from '../../../components/CustomIcon';
 import {FlatList} from 'react-native';
 import {Dimensions} from 'react-native';
-import apiUrl from '../../../apiConfig';
+import apiUrl from '../../../../apiConfig';
 import { Icon } from 'react-native-vector-icons/Icon';
-import GradientBGIconVector from '../../components/GradientBGIconVector';
+import GradientBGIconVector from '../../../components/GradientBGIconVector';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
-import AdminMealCard from '../../components/AdminMealCard';
+import AdminMealCard from '../../../components/AdminMealCard';
 
 
 interface MealDataItem {
@@ -102,8 +102,6 @@ const AdminMealsScreen = ({navigation}:any) => {
 
         {/* Meal Flatlist */}
 
-        
-
       </ScrollView>
       <FlatList
       data={mealData}
@@ -127,7 +125,8 @@ export default AdminMealsScreen
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 5,
-    alignSelf:'center'
+    alignSelf:'center',
+    marginBottom:85,
   },
   mealContainer: {
     width: 'auto',

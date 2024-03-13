@@ -7,47 +7,46 @@ import ImageBackgroundInfo from './ImageBackgroundInfo';
 
 interface FavoritesItemCardProps {
   id: string;
-  imagelink_square: string;
-  name: string;
-  description: string;
+  imagelink_square:string;
+  description:string;
   favourite: boolean;
   toggleFavouriteItem: any;
 }
 
 const FavoritesItemCard: React.FC<FavoritesItemCardProps> = ({
   id,
+  imagelink_square,
+  description,
   toggleFavouriteItem,
   favourite,
 }) => {
-  const [mealItem, setMealItem] = useState<any>(null);
+  // const [mealItem, setMealItem] = useState<any>(null);
 
-  useEffect(() => {
-    const fetchCoffeeItem = async () => {
-      try {
-        // console.log(id);
-        const response = await fetch(`${apiUrl}/api/meal-item/${id}`); // Use id from props
-        if (!response.ok) {
-          throw new Error('Failed to fetch coffee item');
-        }
-        const data = await response.json();
-        setMealItem(data);
-      } catch (error) {
-        console.error(error);
-        // Handle error here
-      }
-    };
+  // useEffect(() => {
+  //   const fetchCoffeeItem = async () => {
+  //     try {
+  //       // console.log(id);
+  //       const response = await fetch(`${apiUrl}/api/meal-item/${id}`); // Use id from props
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch fav item');
+  //       }
+  //       const data = await response.json();
+  //       setMealItem(data);
+  //     } catch (error) {
+  //       console.error(error);
+  //       // Handle error here
+  //     }
+  //   };
 
-    fetchCoffeeItem();
-  }, [id]); // Add id to the dependency array
+  //   fetchCoffeeItem();
+  // }, [id]); // Add id to the dependency array
 
   return (
     <View style={styles.CardContainer}>
-      {mealItem && (
-        <>
           <ImageBackgroundInfo
             EnableBackHandler={false}
-            imagelink_square={mealItem.imagelink_square}
-            id={mealItem.id}
+            imagelink_square={imagelink_square}
+            id={id}
             favourite={favourite}
             toggleFavourite={toggleFavouriteItem}
           />
@@ -57,10 +56,8 @@ const FavoritesItemCard: React.FC<FavoritesItemCardProps> = ({
             colors={[COLORS.primaryGreyHex, COLORS.primaryBlackHex]}
             style={styles.ContainerLinearGradient}>
             <Text style={styles.DescriptionTitle}>Description</Text>
-            <Text style={styles.DescriptionText}>{mealItem.description}</Text>
+            <Text style={styles.DescriptionText}>{description}</Text>
           </LinearGradient>
-        </>
-      )}
     </View>
   );
 };

@@ -1,9 +1,11 @@
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
-import apiUrl from '../../../apiConfig'
+import React, { useEffect, useState } from 'react'
+import apiUrl from '../../../../apiConfig'
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 
-const AddMealScreen = ({navigation}: any) => {
+const EditMealScreen = ({navigation, route}:any) => {
+  const { id } = route.params;
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [imagelink_square, setImagelinkSquare] = useState('');
@@ -11,17 +13,49 @@ const AddMealScreen = ({navigation}: any) => {
   const [price, setPrice] = useState('');
   const [type, setType] = useState('');
 
-  const addNewMeal = async () => {
+  const getMeal = async () => {
     try {
-      const newMeal = { name, description, imagelink_square, item_piece, price, type};
-      const response = await axios.post(`${apiUrl}/api/add--meal`, newMeal);
-      if (response.status == 200) {
-        console.info({message: 'Success add new meal'})
+      const response = await fetch(`${apiUrl}/api/meal-item/${id}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch meal');
       }
+      const data = await response.json();
+        setName(data.name);
+        setDescription(data.description);
+        setImagelinkSquare(data.imagelink_square);
+        setItemPiece(data.item_piece);
+        setPrice(data.price);
+        setType(data.type);
     } catch (error) {
       console.error(error);
     }
   }
+
+  const saveMeal = async () => {
+    try {
+      const newMeal = { name, description, imagelink_square, item_piece, price, type };
+    const response = await fetch(`${apiUrl}/api/edit-meal/${id}`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newMeal)
+    });
+    if (!response.ok) {
+      throw new Error('Failed to edit meal')
+    }
+    navigation.goBack()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getMeal()
+    }, [])
+  );
+
 
   return (
     <View style={styles.ScreenContainer}>
@@ -30,7 +64,7 @@ const AddMealScreen = ({navigation}: any) => {
           onPress={() => navigation.goBack()}
           style={styles.edit}>
           <Image
-            source={require('../../assets/icons/arrow-circle-left.png')}
+            source={require('../../../assets/icons/arrow-circle-left.png')}
             style={{
             height: 36,
             width: 36,
@@ -38,42 +72,48 @@ const AddMealScreen = ({navigation}: any) => {
             }}
             resizeMode='contain'
           />
-            <Text style={styles.address}>Add new meal</Text>
+            <Text style={styles.address}>Edit meal</Text>
         </TouchableOpacity>
       </View>
       <Text style={styles.title}>Name</Text>
       <TextInput
         style={styles.input}
+        value={name}
         onChangeText={(text) => setName(text)} // Update recipient state
       />
       <Text style={styles.title}>Description</Text>
       <TextInput
         style={styles.input}
+        value={description}
         onChangeText={(text) => setDescription(text)} // Update phone state
       />
       <Text style={styles.title}>Image link</Text>
       <TextInput
         style={styles.input}
+        value={imagelink_square}
         onChangeText={(text) => setImagelinkSquare(text)} // Update address state
       />
       <Text style={styles.title}>Item piece</Text>
       <TextInput
         style={styles.input}
+        value={item_piece}
         onChangeText={(text) => setItemPiece(text)} // Update notes state
       />
       <Text style={styles.title}>Price</Text>
       <TextInput
         style={styles.input}
-        onChangeText={(text) => setPrice(text)} // Update notes state
+        value={price.toString()} // Convert price to string
+        onChangeText={(text) => setPrice(text)} // Update price state
       />
       <Text style={styles.title}>Type</Text>
       <TextInput
         style={styles.input}
+        value={type}
         onChangeText={(text) => setType(text)} // Update notes state
       />
       <View style={styles.nav}>
         <View style={styles.button}>
-          <TouchableOpacity onPress={addNewMeal}>
+          <TouchableOpacity onPress={saveMeal}>
             <Text style={styles.save}>Save</Text>
           </TouchableOpacity>
         </View>
@@ -82,7 +122,7 @@ const AddMealScreen = ({navigation}: any) => {
   )
 }
 
-export default AddMealScreen
+export default EditMealScreen
 
 const styles = StyleSheet.create({
   ScreenContainer: {

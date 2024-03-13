@@ -19,7 +19,6 @@ import axios from 'axios';
 
 const FavoritesScreen = ({ navigation}: any) => {
   const [favoritesList, setFavoritesList] = useState([]);
-  const [itemList, setItemList] = useState([]);
   const tabBarHeight = useBottomTabBarHeight();
 
   const fetchFavorites = async () => {
@@ -30,8 +29,6 @@ const FavoritesScreen = ({ navigation}: any) => {
         throw new Error('Failed to fetch favorites');
       }
       const data = await response.json();
-      const itemIds = data.map(({itemId}:any) => itemId); // Extracting itemId from data
-      setItemList(itemIds); // Setting itemList to an array of itemIds
       setFavoritesList(data);
     } catch (error) {
       console.error(error);
@@ -76,7 +73,7 @@ const FavoritesScreen = ({ navigation}: any) => {
               <EmptyListAnimation title={'No Favourites'} />
             ) : (
               <View style={styles.listItemContainer}>
-                {itemList.map(itemId => (
+                {favoritesList.map(({itemId, MealItem}:any) => (
                   <TouchableOpacity
                     onPress={() => {
                       navigation.push('Details', {
@@ -86,9 +83,8 @@ const FavoritesScreen = ({ navigation}: any) => {
                     key={itemId}>
                     <FavoritesItemCard
                       id={itemId}
-                      name={itemId}
-                      imagelink_square={itemId}
-                      description={itemId}
+                      imagelink_square={MealItem.imagelink_square}
+                      description={MealItem.description}
                       favourite={itemId}
                       toggleFavouriteItem={() => toggleFavourite(itemId)}
                     />
