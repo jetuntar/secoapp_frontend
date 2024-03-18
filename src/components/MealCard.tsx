@@ -41,6 +41,12 @@ const MealCard: React.FC<MealCardProps> = ({
   price,
   buttonPressHandler,
 }) => {
+
+  let formatted_name = name;
+  if (formatted_name.length > 11) {
+   formatted_name = `${formatted_name.substring(0, 11)}...`;
+  }
+
   return (
     <LinearGradient
       start={{x: 0, y: 0}}
@@ -53,7 +59,7 @@ const MealCard: React.FC<MealCardProps> = ({
         resizeMode="cover">
       </ImageBackground>
 
-      <Text style={styles.CardTitle}>{name}</Text>
+      <Text style={styles.CardTitle}>{formatted_name}</Text>
       <Text style={styles.CardSubtitle}>{item_piece}</Text>
       <View style={styles.CardFooterRow}>
         <Text style={styles.CardPriceCurrency}>

@@ -24,17 +24,6 @@ import AdminOrderItemCard from '../../../components/AdminOrderItemCard';
 import axios from 'axios';
 import HeaderBar from '../../../components/HeaderBar';
 
-interface Address {
-  id:string;
-  userId:string;
-  recipient:string;
-  address:string;
-  phone:string;
-  notes:string;
-  distance:string
-}
-
-
 const AdminOrderScreen = ({navigation}:any) => {
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -53,21 +42,6 @@ const AdminOrderScreen = ({navigation}:any) => {
       throw error;
     }
   }
-
-  // const getUserAddress = async () => {
-  //   try {
-  //     const userId = await AsyncStorage.getItem('userId');
-  //     const response = await fetch(`${apiUrl}/api/get-address/${userId}`)
-  //     if (!response.ok) {
-  //       throw new Error('Failed to fetch carts');
-  //     }
-  //     const data = await response.json();
-  //     setAddressUser(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //     throw error;
-  //   }
-  // }
 
   const fetchOrder = async () => {
     try {
@@ -101,9 +75,6 @@ const AdminOrderScreen = ({navigation}:any) => {
   };
 
   return (
-    // <View>
-    //   <Text>ini order</Text>
-    // </View>
     <View style={styles.ScreenContainer}>
       <HeaderBar/>
       <ScrollView
@@ -117,12 +88,14 @@ const AdminOrderScreen = ({navigation}:any) => {
               <EmptyListAnimation title={'No Orders'} />
             ) : (
               <View style={styles.ListItemContainer}>
-                {orderList.map(({id, itemId, quantity, addressId, order_status, Address, MealItem}: any) => (
+                {orderList.map(({id, itemId, quantity, addressId, order_status, Address, MealItem, order_date}: any) => (
                   <TouchableOpacity
-                  onPress={() => console.log(Address)}  
+                  onPress={() => console.log(MealItem)}  
                   key={itemId}>
                     <AdminOrderItemCard
                     id={id}
+                    recipient={Address.recipient}
+                    order_date={order_date}
                     imagelink_square={MealItem.imagelink_square}
                     itemId={itemId}
                     addressId={addressId}

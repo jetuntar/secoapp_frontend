@@ -13,6 +13,8 @@ import BGIcon from './BGIcon';
 
 interface AdminOrderItemCardProps {
   id: string;
+  recipient:string;
+  order_date:any;
   imagelink_square:string;
   itemId:string;
   quantity:number;
@@ -26,6 +28,8 @@ interface AdminOrderItemCardProps {
 const AdminOrderItemCard: React.FC<AdminOrderItemCardProps> = ({
   id,
   itemId,
+  recipient,
+  order_date,
   imagelink_square,
   quantity,
   name,
@@ -35,6 +39,23 @@ const AdminOrderItemCard: React.FC<AdminOrderItemCardProps> = ({
   buttonPressHandler
 }) => {
 
+  const new_order_date = new Date(order_date);
+  const formatted_date = `${new_order_date.toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'Asia/Jakarta'
+  })}, ${new_order_date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Jakarta'
+  })}`;
+
+  let formatted_name = name;
+  if (formatted_name.length > 8) {
+   formatted_name = `${formatted_name.substring(0, 8)}...`;
+  }
 
   return (
     <View>
@@ -46,41 +67,45 @@ const AdminOrderItemCard: React.FC<AdminOrderItemCardProps> = ({
           <View style={styles.CardInfoContainer}>
             <View style={styles.CardImageInfoContainer}>
               <Image source={{uri: imagelink_square}} style={styles.Image} />
-              <View>
-                <Text style={styles.CardTitle}>{name}</Text>
-                {/* <Text style={styles.CardSubtitle}>{mealItem.item_piece}</Text> */}
-              </View>
-            </View>
-            <View>
-              <TouchableOpacity
-                  onPress={() => {
-                    buttonPressHandler(id);
-                  }}>
-                  <BGIcon
-                    color={COLORS.primaryWhiteHex}
-                    name={'add'}
-                    BGColor={COLORS.primaryOrangeHex}
-                    size={FONTSIZE.size_10}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.CardTableRow}>
               <View style={styles.CardTableRow}>
-                <View style={styles.PriceBoxRight}>
+                <View style={styles.CardTableContainer}>
+                  <View style={styles.CardInnerContainerLeft}>
+                    <Text style={styles.CardTitle}>{formatted_name}</Text>
+                    <Text style={styles.CardSubtitle}>{quantity} Item</Text>
+                  </View>
+                  <View style={styles.CardInnerContainerLeft}>
+                  <Text style={styles.CardOrderDateSubtitle}>{formatted_date}</Text>
+                  </View>
+                </View>
+                <View style={styles.CardTableContainer}>
+                  <View style={styles.CardInnerContainerRight}>
+                    <Text style={styles.CardQuantityPriceText}>
+                      Rp. {(quantity * price).toFixed().toString()}
+                    </Text>
+                  </View>
+                  <View style={styles.CardInnerContainerRight}>
+                    <TouchableOpacity
+                      style={styles.CardButton}
+                      onPress={() => {
+                        buttonPressHandler(id);
+                      }}>
+                      <BGIcon
+                        color={COLORS.primaryWhiteHex}
+                        name={'add'}
+                        BGColor={COLORS.primaryOrangeHex}
+                        size={FONTSIZE.size_10}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                {/* <View style={styles.PriceBox}>
                   <Text style={styles.PriceCurrency}>
                     Rp.<Text style={styles.Price}> {price}</Text>
                   </Text>
-                </View>
-              </View>
-
-              <View style={styles.CardTableRow}>
-                <Text style={styles.CardQuantityPriceText}>
-                  X <Text style={styles.Price}>{quantity}</Text>
-                </Text>
-                <Text style={styles.CardQuantityPriceText}>
-                  Rp. {(quantity * price).toFixed(2).toString()}
-                </Text>
+                </View> */}
+            </View>
+            </View>
+            <View>
               </View>
             </View>
         </LinearGradient>
@@ -111,13 +136,19 @@ const styles = StyleSheet.create({
   },
   CardTitle: {
     fontFamily: FONTFAMILY.poppins_medium,
-    fontSize: FONTSIZE.size_18,
+    fontSize: FONTSIZE.size_20,
     color: COLORS.primaryWhiteHex,
   },
   CardSubtitle: {
     fontFamily: FONTFAMILY.poppins_regular,
     fontSize: FONTSIZE.size_12,
     color: COLORS.secondaryLightGreyHex,
+  },
+  CardOrderDateSubtitle: {
+    fontFamily: FONTFAMILY.poppins_regular,
+    fontSize: FONTSIZE.size_12,
+    color: COLORS.secondaryLightGreyHex,
+    paddingTop:24
   },
   CardCurrency: {
     fontFamily: FONTFAMILY.poppins_semibold,
@@ -127,12 +158,30 @@ const styles = StyleSheet.create({
   CardPrice: {
     color: COLORS.primaryWhiteHex,
   },
+  CardButton: {
+    marginTop:10
+  },
   CardTableRow: {
     flex: 1,
-    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignSelf:'center',
   },
+  CardTableContainer: {
+    flexDirection:'column',
+    justifyContent:'space-between',
+    height:90,
+    width:100
+  },
+  CardInnerContainerLeft:{
+    width:120,
+    height:40,
+   },
+   CardInnerContainerRight:{
+    width:100,
+    height:40,
+    alignItems:'flex-end'
+   },
   SizeBoxLeft: {
     backgroundColor: COLORS.primaryBlackHex,
     height: 45,
@@ -148,8 +197,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.poppins_medium,
     color: COLORS.secondaryLightGreyHex,
   },
-  PriceBoxRight: {
-    backgroundColor: COLORS.primaryBlackHex,
+  PriceBox: {
     height: 45,
     flex: 1,
     borderRadius: BORDERRADIUS.radius_10,
@@ -170,7 +218,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontFamily: FONTFAMILY.poppins_semibold,
-    fontSize: FONTSIZE.size_18,
+    fontSize: FONTSIZE.size_16,
     color: COLORS.primaryOrangeHex,
   },
 });
