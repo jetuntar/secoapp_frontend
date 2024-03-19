@@ -8,7 +8,8 @@ import ImageBackgroundInfo from './ImageBackgroundInfo';
 interface FavoritesItemCardProps {
   id: string;
   imagelink_square:string;
-  description:string;
+  name:string;
+  item_piece:string;
   favourite: boolean;
   toggleFavouriteItem: any;
 }
@@ -16,47 +17,29 @@ interface FavoritesItemCardProps {
 const FavoritesItemCard: React.FC<FavoritesItemCardProps> = ({
   id,
   imagelink_square,
-  description,
+  name,
+  item_piece,
   toggleFavouriteItem,
   favourite,
 }) => {
-  // const [mealItem, setMealItem] = useState<any>(null);
-
-  // useEffect(() => {
-  //   const fetchCoffeeItem = async () => {
-  //     try {
-  //       // console.log(id);
-  //       const response = await fetch(`${apiUrl}/api/meal-item/${id}`); // Use id from props
-  //       if (!response.ok) {
-  //         throw new Error('Failed to fetch fav item');
-  //       }
-  //       const data = await response.json();
-  //       setMealItem(data);
-  //     } catch (error) {
-  //       console.error(error);
-  //       // Handle error here
-  //     }
-  //   };
-
-  //   fetchCoffeeItem();
-  // }, [id]); // Add id to the dependency array
-
   return (
     <View style={styles.CardContainer}>
-          <ImageBackgroundInfo
-            EnableBackHandler={false}
-            imagelink_square={imagelink_square}
-            id={id}
-            favourite={favourite}
-            toggleFavourite={toggleFavouriteItem}
-          />
           <LinearGradient
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
-            colors={[COLORS.primaryGreyHex, COLORS.primaryBlackHex]}
+            colors={[COLORS.primaryWhiteHex, COLORS.primaryWhiteHex]}
             style={styles.ContainerLinearGradient}>
-            <Text style={styles.DescriptionTitle}>Description</Text>
-            <Text style={styles.DescriptionText}>{description}</Text>
+            <View style={styles.Image}>
+              <ImageBackgroundInfo
+                EnableFav={false}
+                imagelink_square={imagelink_square}
+                id={id}
+                favourite={favourite}
+                toggleFavourite={toggleFavouriteItem}
+              />
+            </View>
+            <Text style={styles.Title}>{name}</Text>
+            <Text style={styles.Text}>{item_piece}</Text>
           </LinearGradient>
     </View>
   );
@@ -68,18 +51,24 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   ContainerLinearGradient: {
-    gap: SPACING.space_10,
-    padding: SPACING.space_20,
+    padding:10
   },
-  DescriptionTitle: {
+  Image: {
+    borderRadius:16,
+    overflow: 'hidden'
+  },
+  Title: {
+    paddingTop:10,
+    paddingHorizontal:10,
     fontFamily: FONTFAMILY.poppins_semibold,
-    fontSize: FONTSIZE.size_16,
-    color: COLORS.secondaryLightGreyHex,
+    fontSize: FONTSIZE.size_18,
+    color: COLORS.primaryBlackHex,
   },
-  DescriptionText: {
+  Text: {
+    paddingHorizontal:10,
     fontFamily: FONTFAMILY.poppins_regular,
     fontSize: FONTSIZE.size_14,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
   },
 });
 

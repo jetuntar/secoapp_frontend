@@ -20,13 +20,7 @@ const TabNavigator = () => {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: styles.tabBarStyle,
-        tabBarBackground: () => (
-          <BlurView
-            overlayColor=""
-            blurAmount={15}
-            style={styles.BlurViewStyles}
-          />
-        ),
+        // tabBarActiveBackgroundColor:COLORS.primaryRedHex,
       }}>
       <Tab.Screen
         name="Home"
@@ -35,7 +29,7 @@ const TabNavigator = () => {
           tabBarIcon: ({focused, color, size}) => (
             <CustomIcon
               name="home"
-              size={25}
+              size={22}
               color={
                 focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
               }
@@ -49,7 +43,7 @@ const TabNavigator = () => {
           tabBarIcon: ({focused, color, size}) => (
             <CustomIcon
               name="cart"
-              size={25}
+              size={22}
               color={
                 focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
               }
@@ -63,7 +57,7 @@ const TabNavigator = () => {
           tabBarIcon: ({focused, color, size}) => (
             <CustomIcon
               name="like"
-              size={25}
+              size={22}
               color={
                 focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
               }
@@ -77,7 +71,7 @@ const TabNavigator = () => {
           tabBarIcon: ({focused, color, size}) => (
             <CustomIcon
               name="bell"
-              size={25}
+              size={22}
               color={
                 focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
               }
@@ -91,7 +85,7 @@ const TabNavigator = () => {
           tabBarIcon: ({focused, color, size}) => (
             <CustomIcon
               name="close"
-              size={25}
+              size={22}
               color={
                 focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
               }
@@ -104,20 +98,17 @@ const TabNavigator = () => {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    height: 80,
-    position: 'absolute',
-    backgroundColor: COLORS.primaryBlackRGBA,
-    borderTopWidth: 0,
-    elevation: 0,
+    borderRadius:50,
+    overflow:'hidden',
+    height: 50,
+    width: 300,
+    position:'absolute',
+    backgroundColor: COLORS.primaryWhiteHex,
+    elevation: 10,
     borderTopColor: 'transparent',
-  },
-  BlurViewStyles: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
+    marginBottom:10,
+    marginHorizontal:57
+  }
 });
 
 export default TabNavigator;

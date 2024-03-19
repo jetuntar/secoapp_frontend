@@ -24,10 +24,6 @@ import axios from 'axios';
 interface CartItemProps {
   quantity:string,
   id: string;
-  name: string;
-  imagelink_square:String;
-  item_piece: string;
-  price: any;
   incrementCartItemQuantityHandler: any;
   decrementCartItemQuantityHandler: any;
 }
@@ -35,10 +31,6 @@ interface CartItemProps {
 const CartItem: React.FC<CartItemProps> = ({
   id,
   quantity,
-  imagelink_square,
-  name,
-  item_piece,
-  price,
   incrementCartItemQuantityHandler,
   decrementCartItemQuantityHandler,
 }) => {
@@ -63,6 +55,11 @@ const CartItem: React.FC<CartItemProps> = ({
     fetchCoffeeItem();
   }, [id]);
 
+  const formattedName =
+    mealItem && mealItem.name.length > 11
+      ? `${mealItem.name.substring(0, 11)}...`
+      : mealItem?.name;
+
   return (
     <View>
       {mealItem && (
@@ -75,23 +72,18 @@ const CartItem: React.FC<CartItemProps> = ({
           <View style={styles.CartItemRow}>
             <Image source={{uri: mealItem.imagelink_square}} style={styles.CartItemImage} />
             <View style={styles.CartItemInfo}>
-              <View>
-                <Text style={styles.CartItemTitle}>{mealItem.name}</Text>
+              <View style={styles.InfoText}>
+                <Text style={styles.CartItemTitle}>{formattedName}</Text>
                 <Text style={styles.CartItemSubtitle}>
                   {mealItem.item_piece}
                 </Text>
-              </View>
-            </View>
-          </View>
-            <View
-              style={styles.CartItemSizeRowContainer}>
-              <View style={styles.CartItemSizeValueContainer}>
                 <Text style={styles.SizeCurrency}>
                   <Text style={styles.SizePrice}>Rp. {mealItem.price}</Text>
                 </Text>
               </View>
-              <View style={styles.CartItemSizeValueContainer}>
-                <TouchableOpacity
+            </View>
+            <View style={styles.CartQuantityContainer}>
+              <TouchableOpacity
                   style={styles.CartItemIcon}
                   onPress={() => {
                     decrementCartItemQuantityHandler(id);
@@ -99,7 +91,7 @@ const CartItem: React.FC<CartItemProps> = ({
                   <CustomIcon
                     name="minus"
                     color={COLORS.primaryWhiteHex}
-                    size={FONTSIZE.size_10}
+                    size={6}
                   />
                 </TouchableOpacity>
                 <View style={styles.CartItemQuantityContainer}>
@@ -115,11 +107,11 @@ const CartItem: React.FC<CartItemProps> = ({
                   <CustomIcon
                     name="add"
                     color={COLORS.primaryWhiteHex}
-                    size={FONTSIZE.size_10}
+                    size={6}
                   />
                 </TouchableOpacity>
-              </View>
             </View>
+          </View>
         </LinearGradient>
         </>
       )}
@@ -140,18 +132,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   CartItemImage: {
-    height: 130,
-    width: 130,
+    height: 90,
+    width: 90,
     borderRadius: BORDERRADIUS.radius_20,
   },
   CartItemInfo: {
-    flex: 1,
+    height:90,
+    width:130,
+    gap:4,
+    flexDirection:'row',
     paddingVertical: SPACING.space_4,
-    justifyContent: 'space-between',
   },
   CartItemTitle: {
     fontFamily: FONTFAMILY.poppins_medium,
-    fontSize: FONTSIZE.size_18,
+    fontSize: FONTSIZE.size_16,
     color: COLORS.primaryWhiteHex,
   },
   CartItemSubtitle: {
@@ -206,18 +200,21 @@ const styles = StyleSheet.create({
     color: COLORS.primaryWhiteHex,
   },
   CartItemIcon: {
+    height:30,
+    width:30,
     backgroundColor: COLORS.primaryOrangeHex,
     padding: SPACING.space_12,
     borderRadius: BORDERRADIUS.radius_10,
   },
   CartItemQuantityContainer: {
     backgroundColor: COLORS.primaryBlackHex,
-    width: 80,
+    width: 40,
+    height:30,
     borderRadius: BORDERRADIUS.radius_10,
     borderWidth: 2,
     borderColor: COLORS.primaryOrangeHex,
     alignItems: 'center',
-    paddingVertical: SPACING.space_4,
+    paddingVertical: SPACING.space_2,
   },
   CartItemQuantityText: {
     fontFamily: FONTFAMILY.poppins_semibold,
@@ -251,6 +248,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
+  CartQuantityContainer:{
+    alignItems:'center',
+    flexDirection:'row',
+    gap:4
+  },
+  InfoText:{
+    justifyContent:'space-evenly',
+  }
 });
 
 export default CartItem;

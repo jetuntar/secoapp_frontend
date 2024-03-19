@@ -84,7 +84,8 @@ const FavoritesScreen = ({ navigation}: any) => {
                     <FavoritesItemCard
                       id={itemId}
                       imagelink_square={MealItem.imagelink_square}
-                      description={MealItem.description}
+                      name={MealItem.name}
+                      item_piece={MealItem.item_piece}
                       favourite={itemId}
                       toggleFavouriteItem={() => toggleFavourite(itemId)}
                     />

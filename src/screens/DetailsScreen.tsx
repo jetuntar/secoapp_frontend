@@ -7,6 +7,7 @@ import {
   View,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {useStore} from '../store/store';
 import {
@@ -21,6 +22,7 @@ import PaymentFooter from '../components/PaymentFooter';
 import apiUrl from '../../apiConfig';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import GradientBGIcon from '../components/GradientBGIcon';
 
 interface MealDetail {
   id: string;
@@ -34,36 +36,23 @@ interface MealDetail {
 }
 
 
-const DetailsScreen = ({navigation, route}: any) => {
+const DetailsScreen = ({navigation, route, favourite}: any) => {
   
   const { id } = route.params;
   const [mealDetail, setMealDetail] = useState<MealDetail | null>(null);// Use 'any' for now
-
-  // const ItemOfIndex = useStore((state: any) =>
-  //   route.params.type == 'Coffee' ? state.CoffeeList : state.BeanList,
-  // )[route.params.index];
-  // const addToCart = useStore((state: any) => state.addToCart);
-  // const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
-
-  // const [price, setPrice] = useState(ItemOfIndex.prices[0]);
-  // const [fullDesc, setFullDesc] = useState(false);
 
   const toggleFavourite = async (id: string) => {
     try {
       const userId = await AsyncStorage.getItem('userId'); // Retrieve userId from AsyncStorage
       await axios.post(
           `${apiUrl}/api/add-to-fav/${userId}/${id}`
-        ); // Make HTTP request to add to favorites
+        );
       navigation.goBack();
     } catch (error) {
       console.error('ToggleFavourite error:', error);
-      // Handle error
     }
   };
 
-  const BackHandler = () => {
-    navigation.pop();
-  };
 
   const addToCart = async (
     id: string
@@ -99,18 +88,68 @@ const DetailsScreen = ({navigation, route}: any) => {
   return (
     <View style={styles.ScreenContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.ScrollViewFlex}>
-        <ImageBackgroundInfo
-          EnableBackHandler={true}
-          imagelink_square={mealDetail ? mealDetail.imagelink_square : 'Image not found'}
-          id={mealDetail ? mealDetail.id : ''}
-          favourite={mealDetail ? mealDetail.favourite : false}
-          BackHandler={BackHandler}
-          toggleFavourite={toggleFavourite}
-        />
-        <View style={styles.FooterInfoArea}>
+      <View style={styles.HeaderContainer}>
+        <View style={styles.HeaderInnerContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.Icon}>
+          <Image
+            source={require('../assets/icons/arrow-circle-left.png')}
+            style={{
+            height: 36,
+            width: 36,
+            marginRight: 8
+            }}
+            resizeMode='contain'
+          />
+            <Text style={styles.Title}>Details</Text>
+        </TouchableOpacity>
+        </View>
+        <View style={styles.HeaderInnerContainer}>
+            <TouchableOpacity
+              style={styles.FavIcon}
+              onPress={() => {
+                toggleFavourite(id)
+              }}>
+              <GradientBGIcon
+                name="like"
+                color={
+                  favourite ? COLORS.primaryRedHex : COLORS.primaryLightGreyHex
+                }
+                size={FONTSIZE.size_16}
+              />
+            </TouchableOpacity>
+        </View>
+      </View>
+      <View
+        style={styles.ViewFlex}>
+        <View style={styles.ImageArea}>
+          <View style={styles.Image}>
+            <ImageBackgroundInfo
+              EnableFav={true}
+              imagelink_square={mealDetail ? mealDetail.imagelink_square : 'Image not found'}
+              id={mealDetail ? mealDetail.id : ''}
+              favourite={mealDetail ? mealDetail.favourite : false}
+              toggleFavourite={toggleFavourite}
+            />
+          </View>
+        </View>
+        <View style={styles.DetailsArea}>
+          <View style={styles.HeaderDetails}>
+            <View style={styles.HeaderDetailsContainer}>
+              <View style={styles.HeaderDetailsInnerContainer}>
+                <Text style={styles.NameText}>{mealDetail ? mealDetail.name : ''}</Text>
+              </View>
+              <View style={styles.HeaderDetailsInnerContainer}>
+                <Text style={styles.ItemText}>{mealDetail ? mealDetail.item_piece : ''}</Text>
+              </View>
+            </View>
+            <View style={styles.HeaderDetailsContainer}>
+            <Text style={styles.PriceText}>
+            Rp. <Text style={styles.Price}>{mealDetail ? mealDetail.price : ''}</Text>
+            </Text>
+            </View>
+          </View>
           <Text style={styles.InfoTitle}>Description</Text>
           <Text style={styles.DescriptionText}>
             {mealDetail?.description}
@@ -125,7 +164,7 @@ const DetailsScreen = ({navigation, route}: any) => {
             });
           }}
         />
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -135,18 +174,50 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.primaryBlackHex,
   },
-  ScrollViewFlex: {
+  ViewFlex: {
     flexGrow: 1,
     justifyContent: 'space-between',
   },
-  FooterInfoArea: {
-    padding: SPACING.space_20,
+  DetailsArea: {
+    paddingHorizontal: SPACING.space_20,
   },
   InfoTitle: {
     fontFamily: FONTFAMILY.poppins_semibold,
     fontSize: FONTSIZE.size_16,
     color: COLORS.primaryWhiteHex,
-    marginBottom: SPACING.space_10,
+  },
+  HeaderContainer: {
+    paddingHorizontal:20,
+    paddingVertical:10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  HeaderInnerContainer:{
+    width:150
+  },
+  Icon: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 50,
+  },
+  Title: {
+    color: COLORS.primaryWhiteHex,
+    fontFamily: "Manrope, sans-serif",
+    fontWeight: "800",
+    fontSize: 18,
+  },
+  ImageArea:{
+    paddingHorizontal:20,
+    marginBottom:-20
+  },
+  Image: {
+    borderRadius:16,
+    overflow: 'hidden'
+  },
+  FavIcon: {
+    alignSelf:'flex-end',
+    width: 40
   },
   DescriptionText: {
     letterSpacing: 0.5,
@@ -155,23 +226,35 @@ const styles = StyleSheet.create({
     color: COLORS.primaryWhiteHex,
     marginBottom: SPACING.space_30,
   },
-  SizeOuterContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: SPACING.space_20,
+  HeaderDetails: {
+    height:70,
+    justifyContent:'space-between',
+    flexDirection:'row'
   },
-  SizeBox: {
-    flex: 1,
-    backgroundColor: COLORS.primaryDarkGreyHex,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: SPACING.space_24 * 2,
-    borderRadius: BORDERRADIUS.radius_10,
-    borderWidth: 2,
+  HeaderDetailsContainer:{
+    flexDirection:'column'
   },
-  SizeText: {
-    fontFamily: FONTFAMILY.poppins_medium,
+  HeaderDetailsInnerContainer:{
+    height:30,
+    width:240,
+  },
+  NameText: {
+    fontFamily: FONTFAMILY.poppins_semibold,
+    fontSize: FONTSIZE.size_18,
+    color: COLORS.primaryWhiteHex,
+  },
+  ItemText: {
+    fontFamily: FONTFAMILY.poppins_light,
+    fontSize: FONTSIZE.size_14,
+    color: COLORS.primaryWhiteHex,
+  },
+  PriceText: {
+    fontFamily: FONTFAMILY.poppins_semibold,
+    fontSize: FONTSIZE.size_20,
+    color: COLORS.primaryOrangeHex,
+  },
+  Price: {
+    color: COLORS.primaryWhiteHex,
   },
 });
 

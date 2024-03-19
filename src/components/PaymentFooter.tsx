@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    height: SPACING.space_36 * 2,
+    height: SPACING.space_30 * 2,
     borderRadius: BORDERRADIUS.radius_20,
   },
   ButtonText: {

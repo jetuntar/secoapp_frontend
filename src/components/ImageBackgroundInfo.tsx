@@ -16,7 +16,7 @@ import {
 } from '../theme/theme';
 
 interface ImageBackgroundInfoProps {
-  EnableBackHandler: boolean;
+  EnableFav: boolean;
   imagelink_square: string;
   id: string;
   favourite: boolean;
@@ -25,7 +25,7 @@ interface ImageBackgroundInfoProps {
 }
 
 const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
-  EnableBackHandler,
+  EnableFav,
   imagelink_square,
   id,
   favourite,
@@ -37,30 +37,8 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
       <ImageBackground
         source={{uri : imagelink_square}}
         style={styles.ItemBackgroundImage}>
-        {EnableBackHandler ? (
+        {EnableFav ? (
           <View style={styles.ImageHeaderBarContainerWithBack}>
-            <TouchableOpacity
-              onPress={() => {
-                BackHandler();
-              }}>
-              <GradientBGIcon
-                name="left"
-                color={COLORS.primaryLightGreyHex}
-                size={FONTSIZE.size_16}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                toggleFavourite(id)
-              }}>
-              <GradientBGIcon
-                name="like"
-                color={
-                  favourite ? COLORS.primaryRedHex : COLORS.primaryLightGreyHex
-                }
-                size={FONTSIZE.size_16}
-              />
-            </TouchableOpacity>
           </View>
         ) : (
           <View style={styles.ImageHeaderBarContainerWithoutBack}>
@@ -96,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   ImageHeaderBarContainerWithoutBack: {
-    padding: SPACING.space_30,
+    padding: SPACING.space_10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',

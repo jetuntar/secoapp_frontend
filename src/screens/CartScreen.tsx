@@ -41,7 +41,6 @@ const CartScreen = ({navigation}:any) => {
   const tabBarHeight = useBottomTabBarHeight();
   const [cartList, setCartList] = useState<any[]>([])
   const [itemList, setItemList] = useState<any[]>([])
-  const [cartPrice, setCartPrice] = useState<CartItem[]>([])
   const [itemDetails, setItemDetails] = useState<any>([])
   const [addressUser, setAddressUser] = useState<Address[]>([])
   const [totalPriceWithDelivery, setTotalPriceWithDelivery] = useState<number>(0);
@@ -338,10 +337,6 @@ const CartScreen = ({navigation}:any) => {
                     <CartItem
                       id={itemId}
                       quantity={quantity}
-                      name={itemId.name}
-                      item_piece={itemId.item_piece}
-                      imagelink_square={itemId.imagelink_square}
-                      price={itemId.price}
                       incrementCartItemQuantityHandler={
                         incrementCartItemQuantityHandler
                       }
