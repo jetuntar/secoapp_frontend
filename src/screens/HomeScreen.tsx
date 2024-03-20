@@ -9,6 +9,7 @@ import {
   View,
   ToastAndroid,
   ImageProps,
+  Image,
 } from 'react-native';
 import {useStore} from '../store/store';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
@@ -244,12 +245,6 @@ const HomeScreen = ({navigation}: any) => {
             <Text style={styles.AddressText}>{addressUser.length > 0 ? addressUser[0].recipient : 'Set Address'}</Text>
           </View>
         </TouchableOpacity>
-      <GradientBGIconVector
-        onPress={handleLogout}
-        nameVector="logout"
-        colorVector={COLORS.primaryLightGreyHex}
-        sizeVector={FONTSIZE.size_16}
-      />
     </View>
 
         {/* Search Input */}
@@ -386,6 +381,9 @@ const styles = StyleSheet.create({
   },
   ScrollViewFlex: {
     flexGrow: 1,
+  },
+  logout: {
+    alignSelf:'center'
   },
   ScreenTitle: {
     fontSize: FONTSIZE.size_28,

@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {Image, StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {COLORS} from '../theme/theme';
+import {BORDERRADIUS, COLORS} from '../theme/theme';
 import {BlurView} from '@react-native-community/blur';
 import HomeScreen from '../screens/HomeScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
@@ -20,7 +20,7 @@ const TabNavigator = () => {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: styles.tabBarStyle,
-        // tabBarActiveBackgroundColor:COLORS.primaryRedHex,
+        tabBarActiveBackgroundColor: COLORS.primaryOrangeHex,
       }}>
       <Tab.Screen
         name="Home"
@@ -31,7 +31,7 @@ const TabNavigator = () => {
               name="home"
               size={22}
               color={
-                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
+                focused ? COLORS.primaryLightGreyHex: COLORS.primaryLightGreyHex
               }
             />
           ),
@@ -45,7 +45,7 @@ const TabNavigator = () => {
               name="cart"
               size={22}
               color={
-                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
+                focused ? COLORS.primaryLightGreyHex: COLORS.primaryLightGreyHex
               }
             />
           ),
@@ -59,7 +59,7 @@ const TabNavigator = () => {
               name="like"
               size={22}
               color={
-                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
+                focused ? COLORS.primaryLightGreyHex: COLORS.primaryLightGreyHex
               }
             />
           ),
@@ -73,7 +73,7 @@ const TabNavigator = () => {
               name="bell"
               size={22}
               color={
-                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
+                focused ? COLORS.primaryLightGreyHex: COLORS.primaryLightGreyHex
               }
             />
           ),
@@ -83,12 +83,14 @@ const TabNavigator = () => {
         component={SettingScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
-            <CustomIcon
-              name="close"
-              size={22}
-              color={
-                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
-              }
+            <Image
+              source={require('../assets/icons/profile.png')}
+              style={{
+              alignSelf:'center',
+              height: 26,
+              width: 26,
+              }}
+              resizeMode='contain'
             />
           ),
         }}></Tab.Screen>
