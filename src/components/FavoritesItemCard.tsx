@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
   CardContainer: {
     borderRadius: BORDERRADIUS.radius_25,
     overflow: 'hidden',
+    elevation:6
   },
   ContainerLinearGradient: {
     padding:10
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     paddingHorizontal:10,
     fontFamily: FONTFAMILY.poppins_regular,
     fontSize: FONTSIZE.size_14,
-    color: COLORS.primaryBlackHex,
+    color: COLORS.primaryDarkWhiteHex,
   },
 });
 

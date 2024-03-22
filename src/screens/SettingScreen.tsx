@@ -70,7 +70,7 @@ const SettingScreen = ({ navigation}: any) => {
     <View style={styles.ScreenContainer}>
     <View style={styles.box}>
     <Image
-          source={require('../assets/icons/profile.png')}
+          source={require('../assets/icons/pp_seco.png')}
           style={{
           alignSelf:'center',
           height: 110,
@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
     marginTop: 100,
     borderRadius: 16,
     alignSelf:'center',
+    elevation:4
   },
   boxSet: {
     width: 333,
@@ -189,6 +190,7 @@ const styles = StyleSheet.create({
     marginTop: 35,
     borderRadius: 16,
     alignSelf:'center',
+    elevation:4
   },
   input: {
     width: "100%",

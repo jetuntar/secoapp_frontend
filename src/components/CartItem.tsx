@@ -67,7 +67,7 @@ const CartItem: React.FC<CartItemProps> = ({
         <LinearGradient
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
-          colors={[COLORS.primaryGreyHex, COLORS.primaryBlackHex]}
+          colors={[COLORS.primaryWhiteHex, COLORS.primaryWhiteHex]}
           style={styles.CartItemLinearGradient}>
           <View style={styles.CartItemRow}>
             <Image source={{uri: mealItem.imagelink_square}} style={styles.CartItemImage} />
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     gap: SPACING.space_12,
     padding: SPACING.space_12,
     borderRadius: BORDERRADIUS.radius_25,
+    elevation:6
   },
   CartItemRow: {
     flexDirection: 'row',
@@ -146,12 +147,12 @@ const styles = StyleSheet.create({
   CartItemTitle: {
     fontFamily: FONTFAMILY.poppins_medium,
     fontSize: FONTSIZE.size_16,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
   },
   CartItemSubtitle: {
     fontFamily: FONTFAMILY.poppins_regular,
     fontSize: FONTSIZE.size_12,
-    color: COLORS.secondaryLightGreyHex,
+    color: COLORS.primaryDarkWhiteHex,
   },
   CartItemRoastedContainer: {
     height: 50,
@@ -197,29 +198,29 @@ const styles = StyleSheet.create({
     color: COLORS.primaryOrangeHex,
   },
   SizePrice: {
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryGreenHex,
   },
   CartItemIcon: {
     height:30,
     width:30,
-    backgroundColor: COLORS.primaryOrangeHex,
+    backgroundColor: COLORS.secondaryGreenHex,
     padding: SPACING.space_12,
     borderRadius: BORDERRADIUS.radius_10,
   },
   CartItemQuantityContainer: {
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: COLORS.primaryWhiteHex,
     width: 40,
     height:30,
     borderRadius: BORDERRADIUS.radius_10,
     borderWidth: 2,
-    borderColor: COLORS.primaryOrangeHex,
+    borderColor: COLORS.secondaryGreenHex,
     alignItems: 'center',
     paddingVertical: SPACING.space_2,
   },
   CartItemQuantityText: {
     fontFamily: FONTFAMILY.poppins_semibold,
     fontSize: FONTSIZE.size_16,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
   },
   CartItemSingleLinearGradient: {
     flexDirection: 'row',

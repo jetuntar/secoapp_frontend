@@ -59,22 +59,8 @@ const HomeScreen = ({navigation}: any) => {
   const [addressUser, setAddressUser] = useState<Address[]>([]);
   const [promoData, setPromoData] = useState<any[]>([]);
 
-
-  // const CoffeeList = useStore((state: any) => state.CoffeeList);
-  // // const addToCart = useStore((state: any) => state.addToCart);
-  // const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
-
-  // const [categories, setCategories] = useState(
-  //   getCategoriesFromData(CoffeeList),
-  // );
   const [searchText, setSearchText] = useState('');
-  // const [categoryIndex, setCategoryIndex] = useState({
-  //   index: 0,
-  //   category: categories[0],
-  // });
-  // const [sortedCoffee, setSortedCoffee] = useState(
-  //   getCoffeeList(categoryIndex.category, CoffeeList),
-  // );
+
 
   const ListRef: any = useRef<FlatList>();
   const tabBarHeight = useBottomTabBarHeight();
@@ -107,36 +93,7 @@ const HomeScreen = ({navigation}: any) => {
     setSortedMeal(mealData);
   };
 
-  // const CoffeCardAddToCart = ({
-  //   id,
-  //   index,
-  //   name,
-  //   roasted,
-  //   imagelink_square,
-  //   special_ingredient,
-  //   type,
-  //   prices,
-  // }: any) => {
-  //   addToCart({
-  //     id,
-  //     index,
-  //     name,
-  //     roasted,
-  //     imagelink_square,
-  //     special_ingredient,
-  //     type,
-  //     prices,
-  //   });
-  //   calculateCartPrice();
-  //   ToastAndroid.showWithGravity(
-  //     `${name} is Added to Cart`,
-  //     ToastAndroid.SHORT,
-  //     ToastAndroid.CENTER,
-  //   );
-  // };
-
-
-
+  
   const getItems =  async () => {
     try {
       const items = await fetch(`${apiUrl}/api/meals`);
@@ -146,7 +103,7 @@ const HomeScreen = ({navigation}: any) => {
       console.error(error);
       throw error;
     }
-  } 
+  }
 
   const getUserAddress = async () => {
     try {
@@ -260,19 +217,19 @@ const HomeScreen = ({navigation}: any) => {
               size={FONTSIZE.size_18}
               color={
                 searchText.length > 0
-                  ? COLORS.primaryOrangeHex
-                  : COLORS.primaryLightGreyHex
+                  ? COLORS.primaryDarkWhiteHex
+                  : COLORS.secondaryGreenHex
               }
             />
           </TouchableOpacity>
           <TextInput
-            placeholder="Find Your Meal..."
+            placeholder="Find Your Best Meal..."
             value={searchText}
             onChangeText={text => {
               setSearchText(text);
               searchMeal(text);
             }}
-            placeholderTextColor={COLORS.primaryLightGreyHex}
+            placeholderTextColor={COLORS.primaryDarkWhiteHex}
             style={styles.TextInputContainer}
           />
           {searchText.length > 0 ? (
@@ -284,7 +241,7 @@ const HomeScreen = ({navigation}: any) => {
                 style={styles.InputIcon}
                 name="close"
                 size={FONTSIZE.size_16}
-                color={COLORS.primaryLightGreyHex}
+                color={COLORS.primaryDarkWhiteHex}
               />
             </TouchableOpacity>
           ) : (
@@ -377,7 +334,7 @@ const HomeScreen = ({navigation}: any) => {
 const styles = StyleSheet.create({
   ScreenContainer: {
     flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: COLORS.primarySilverHex,
   },
   ScrollViewFlex: {
     flexGrow: 1,
@@ -396,8 +353,9 @@ const styles = StyleSheet.create({
     marginLeft: SPACING.space_30,
     marginRight: SPACING.space_30,
     borderRadius: BORDERRADIUS.radius_20,
-    backgroundColor: COLORS.primaryDarkGreyHex,
+    backgroundColor: COLORS.primaryWhiteHex,
     alignItems: 'center',
+    elevation:3
   },
   InputIcon: {
     marginHorizontal: SPACING.space_20,
@@ -407,7 +365,7 @@ const styles = StyleSheet.create({
     height: SPACING.space_20 * 3,
     fontFamily: FONTFAMILY.poppins_medium,
     fontSize: FONTSIZE.size_14,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
   },
   CategoryText: {
     fontFamily: FONTFAMILY.poppins_semibold,
@@ -427,10 +385,11 @@ const styles = StyleSheet.create({
     width:160,
     height:60,
     backgroundColor:'white',
-    justifyContent:'center'
+    justifyContent:'center',
+    elevation:3
   },
   TypeButtonContainer: {
-    alignSelf:'center'
+    alignSelf:'center',
   },
   TypeText: {
     fontFamily: FONTFAMILY.poppins_medium,
@@ -439,7 +398,8 @@ const styles = StyleSheet.create({
   },
   PromoFlatlistContainer: {
     marginVertical:16,
-    gap:30
+    gap:30,
+    marginHorizontal:30,
   },
   MealFlatListContainer: {
     marginVertical:16,
@@ -459,7 +419,7 @@ const styles = StyleSheet.create({
     fontSize: FONTSIZE.size_18,
     marginTop: 16,
     fontFamily: FONTFAMILY.poppins_medium,
-    color: COLORS.secondaryLightGreyHex,
+    color: COLORS.primaryBlackHex,
   },
   HeaderContainer: {
     paddingTop: SPACING.space_30,
@@ -483,17 +443,17 @@ const styles = StyleSheet.create({
     height: 60,
     width:200,
     borderRadius: BORDERRADIUS.radius_20,
-    backgroundColor: COLORS.primaryDarkGreyHex,
+    backgroundColor: COLORS.primarySilverHex,
   },
   AddressTitle: {
     fontFamily: FONTFAMILY.poppins_medium,
     fontSize: FONTSIZE.size_14,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryDarkWhiteHex,
   },
   AddressText:{
     fontFamily: FONTFAMILY.poppins_medium,
     fontSize: FONTSIZE.size_16,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
   },
   innerAddressBox:{
     marginTop:5

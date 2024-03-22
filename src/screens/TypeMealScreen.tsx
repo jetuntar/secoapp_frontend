@@ -1,4 +1,4 @@
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View, Image, StatusBar } from 'react-native'
 import React, { Fragment, useEffect, useState } from 'react'
 import { COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme'
 import apiUrl from '../../apiConfig'
@@ -37,6 +37,24 @@ const TypeMealScreen = ({navigation, route}:any) => {
 
   return (
     <View style={styles.ScreenContainer}>
+      <View style={styles.HeaderContainer}>
+        <View style={styles.HeaderInnerContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.Icon}>
+          <Image
+            source={require('../assets/icons/arrow-circle-left.png')}
+            style={{
+            height: 36,
+            width: 36,
+            marginRight: 8
+            }}
+            resizeMode='contain'
+          />
+            <Text style={styles.Title}>{type}</Text>
+        </TouchableOpacity>
+        </View>
+      </View>
       <FlatList
           ListEmptyComponent={
             <View style={styles.EmptyListContainer}>
@@ -78,7 +96,28 @@ export default TypeMealScreen
 const styles = StyleSheet.create({
   ScreenContainer: {
     flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: COLORS.primarySilverHex,
+  },
+  HeaderContainer: {
+    paddingHorizontal:20,
+    paddingVertical:10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  HeaderInnerContainer:{
+    width:150
+  },
+  Icon: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 40,
+  },
+  Title: {
+    color: COLORS.secondaryDarkGreyHex,
+    fontFamily: "Manrope, sans-serif",
+    fontWeight: "800",
+    fontSize: 18,
   },
   CategoryText: {
     fontFamily: FONTFAMILY.poppins_semibold,
@@ -106,4 +145,5 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.poppins_medium,
     color: COLORS.secondaryLightGreyHex,
   },
+  
 })

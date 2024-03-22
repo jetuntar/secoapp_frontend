@@ -86,7 +86,15 @@ const OrderHistoryScreen = ({navigation}: any) => {
   return (
     <View style={styles.ScreenContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
-
+      <View style={styles.HeaderContainer}>
+        <View style={styles.HeaderInnerContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.Icon}>
+            <Text style={styles.Title}>Order History</Text>
+        </TouchableOpacity>
+        </View>
+      </View>
       {showAnimation ? (
         <PopUpAnimation
           style={styles.LottieAnimation}
@@ -106,8 +114,9 @@ const OrderHistoryScreen = ({navigation}: any) => {
             {orderList.length == 0 ? (
               <EmptyListAnimation title={'No Order History'} />
             ) : (
+              
               <View style={styles.ListItemContainer}>
-                {orderList.map(({itemId, quantity, MealItem, Address}: any) => (
+                {orderList.map(({itemId, quantity, MealItem, Address, order_date}: any) => (
                   <TouchableOpacity onPress={() => {
                     navigation.push('Details', {
                       id: itemId,
@@ -116,6 +125,7 @@ const OrderHistoryScreen = ({navigation}: any) => {
                   key={itemId}>
                     <OrderItemCard
                     id={itemId}
+                    order_date={order_date}
                     quantity={quantity}
                     imagelink_square={MealItem.imagelink_square}
                     price={MealItem.price}
@@ -137,7 +147,28 @@ export default OrderHistoryScreen
 const styles = StyleSheet.create({
   ScreenContainer: {
     flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: COLORS.primarySilverHex,
+  },
+  HeaderContainer: {
+    paddingHorizontal:25,
+    paddingVertical:10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  HeaderInnerContainer:{
+    width:150
+  },
+  Icon: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 40,
+  },
+  Title: {
+    color: COLORS.secondaryDarkGreyHex,
+    fontFamily: "Manrope, sans-serif",
+    fontWeight: "800",
+    fontSize: 18,
   },
   LottieAnimation: {
     height: 250,
@@ -154,7 +185,7 @@ const styles = StyleSheet.create({
   },
   ListItemContainer: {
     paddingHorizontal: SPACING.space_20,
-    gap: SPACING.space_30,
+    gap: SPACING.space_10,
   },
   DownloadButton: {
     margin: SPACING.space_20,

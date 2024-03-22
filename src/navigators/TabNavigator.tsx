@@ -20,7 +20,7 @@ const TabNavigator = () => {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: styles.tabBarStyle,
-        tabBarActiveBackgroundColor: COLORS.primaryOrangeHex,
+        tabBarActiveBackgroundColor: COLORS.secondaryGreenHex,
       }}>
       <Tab.Screen
         name="Home"
@@ -31,7 +31,7 @@ const TabNavigator = () => {
               name="home"
               size={22}
               color={
-                focused ? COLORS.primaryLightGreyHex: COLORS.primaryLightGreyHex
+                focused ? COLORS.primaryWhiteHex: COLORS.primaryLightGreyHex
               }
             />
           ),
@@ -45,7 +45,7 @@ const TabNavigator = () => {
               name="cart"
               size={22}
               color={
-                focused ? COLORS.primaryLightGreyHex: COLORS.primaryLightGreyHex
+                focused ? COLORS.primaryWhiteHex: COLORS.primaryLightGreyHex
               }
             />
           ),
@@ -59,7 +59,7 @@ const TabNavigator = () => {
               name="like"
               size={22}
               color={
-                focused ? COLORS.primaryLightGreyHex: COLORS.primaryLightGreyHex
+                focused ? COLORS.primaryWhiteHex: COLORS.primaryLightGreyHex
               }
             />
           ),
@@ -73,7 +73,7 @@ const TabNavigator = () => {
               name="bell"
               size={22}
               color={
-                focused ? COLORS.primaryLightGreyHex: COLORS.primaryLightGreyHex
+                focused ? COLORS.primaryWhiteHex: COLORS.primaryLightGreyHex
               }
             />
           ),

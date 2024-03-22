@@ -52,18 +52,18 @@ const styles = StyleSheet.create({
   PriceTitle: {
     fontFamily: FONTFAMILY.poppins_medium,
     fontSize: FONTSIZE.size_14,
-    color: COLORS.secondaryLightGreyHex,
+    color: COLORS.primaryBlackHex,
   },
   PriceText: {
     fontFamily: FONTFAMILY.poppins_semibold,
     fontSize: FONTSIZE.size_20,
-    color: COLORS.primaryOrangeHex,
+    color: COLORS.primaryWhiteGreenHex,
   },
   Price: {
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryWhiteGreenHex,
   },
   PayButton: {
-    backgroundColor: COLORS.primaryOrangeHex,
+    backgroundColor: COLORS.secondaryGreenHex,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

@@ -312,7 +312,7 @@ const CartScreen = ({navigation}:any) => {
                     style={styles.InputIcon}
                     name="location"
                     size={FONTSIZE.size_30}
-                    color={COLORS.primaryLightGreyHex}
+                    color={COLORS.primaryRedHex}
                   />
             </View>
           <View style={styles.innerAddressBox}>
@@ -368,7 +368,7 @@ const CartScreen = ({navigation}:any) => {
 
 const styles = StyleSheet.create({ScreenContainer: {
   flex: 1,
-  backgroundColor: COLORS.primaryBlackHex,
+  backgroundColor: COLORS.primarySilverHex,
 },
 ScrollViewFlex: {
   flexGrow: 1,
@@ -405,17 +405,17 @@ AddressBox: {
   height: 60,
   width:200,
   borderRadius: BORDERRADIUS.radius_20,
-  backgroundColor: COLORS.primaryDarkGreyHex,
+  backgroundColor: COLORS.primarySilverHex,
 },
 AddressTitle: {
   fontFamily: FONTFAMILY.poppins_medium,
   fontSize: FONTSIZE.size_14,
-  color: COLORS.primaryWhiteHex,
+  color: COLORS.primaryDarkWhiteHex,
 },
 AddressText:{
   fontFamily: FONTFAMILY.poppins_medium,
   fontSize: FONTSIZE.size_16,
-  color: COLORS.primaryWhiteHex,
+  color: COLORS.primaryBlackHex,
 },
 innerAddressBox:{
   marginTop:5

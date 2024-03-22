@@ -114,7 +114,7 @@ const DetailsScreen = ({navigation, route, favourite}: any) => {
               <GradientBGIcon
                 name="like"
                 color={
-                  favourite ? COLORS.primaryRedHex : COLORS.primaryLightGreyHex
+                  favourite ? COLORS.primaryRedHex : COLORS.primaryWhiteHex
                 }
                 size={FONTSIZE.size_16}
               />
@@ -172,7 +172,7 @@ const DetailsScreen = ({navigation, route, favourite}: any) => {
 const styles = StyleSheet.create({
   ScreenContainer: {
     flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: COLORS.primarySilverHex,
   },
   ViewFlex: {
     flexGrow: 1,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   InfoTitle: {
     fontFamily: FONTFAMILY.poppins_semibold,
     fontSize: FONTSIZE.size_16,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
   },
   HeaderContainer: {
     paddingHorizontal:20,
@@ -199,10 +199,10 @@ const styles = StyleSheet.create({
   Icon: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: 50,
+    height: 40,
   },
   Title: {
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.secondaryDarkGreyHex,
     fontFamily: "Manrope, sans-serif",
     fontWeight: "800",
     fontSize: 18,
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     fontFamily: FONTFAMILY.poppins_regular,
     fontSize: FONTSIZE.size_14,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryDarkWhiteHex,
     marginBottom: SPACING.space_30,
   },
   HeaderDetails: {
@@ -241,20 +241,20 @@ const styles = StyleSheet.create({
   NameText: {
     fontFamily: FONTFAMILY.poppins_semibold,
     fontSize: FONTSIZE.size_18,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
   },
   ItemText: {
     fontFamily: FONTFAMILY.poppins_light,
     fontSize: FONTSIZE.size_14,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryDarkWhiteHex,
   },
   PriceText: {
     fontFamily: FONTFAMILY.poppins_semibold,
     fontSize: FONTSIZE.size_20,
-    color: COLORS.primaryOrangeHex,
+    color: COLORS.primaryGreenHex,
   },
   Price: {
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryGreenHex,
   },
 });
 

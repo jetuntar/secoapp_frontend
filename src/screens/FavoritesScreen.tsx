@@ -62,7 +62,15 @@ const FavoritesScreen = ({ navigation}: any) => {
   return (
     <View style={styles.screenContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
-
+      <View style={styles.HeaderContainer}>
+        <View style={styles.HeaderInnerContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.Icon}>
+            <Text style={styles.Title}>Favorites</Text>
+        </TouchableOpacity>
+        </View>
+      </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewFlex}>
@@ -105,7 +113,28 @@ export default FavoritesScreen;
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: COLORS.primarySilverHex,
+  },
+  HeaderContainer: {
+    paddingHorizontal:30,
+    paddingVertical:10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  HeaderInnerContainer:{
+    width:150
+  },
+  Icon: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 40,
+  },
+  Title: {
+    color: COLORS.secondaryDarkGreyHex,
+    fontFamily: "Manrope, sans-serif",
+    fontWeight: "800",
+    fontSize: 18,
   },
   scrollViewFlex: {
     flexGrow: 1,
