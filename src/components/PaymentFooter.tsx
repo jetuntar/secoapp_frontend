@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   PriceText: {
     fontFamily: FONTFAMILY.poppins_semibold,
-    fontSize: FONTSIZE.size_20,
+    fontSize: FONTSIZE.size_18,
     color: COLORS.primaryWhiteGreenHex,
   },
   Price: {

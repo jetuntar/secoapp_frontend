@@ -30,6 +30,7 @@ import { Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import AdminMealCard from '../../../components/AdminMealCard';
+import GradientBGIcon from '../../../components/GradientBGIcon';
 
 
 interface MealDataItem {
@@ -91,12 +92,14 @@ const AdminMealsScreen = ({navigation}:any) => {
         contentContainerStyle={styles.ScrollViewFlex}>
           {/* App Header */}
         <View style={styles.HeaderContainer}>
-          <GradientBGIconVector
-            onPress={()=> navigation.navigate('AddMeal')}
-            nameVector="home"
-            colorVector={COLORS.primaryLightGreyHex}
-            sizeVector={FONTSIZE.size_16}
+        <TouchableOpacity 
+            onPress={()=> navigation.navigate('AddMeal')}>
+          <GradientBGIcon
+            name="add"
+            color={COLORS.primaryLightGreyHex}
+            size={FONTSIZE.size_16}
           />
+        </TouchableOpacity>
         </View>
 
 
@@ -146,7 +149,7 @@ const styles = StyleSheet.create({
   },
   ScreenContainer: {
     flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: COLORS.primarySilverHex,
   },
   ScrollViewFlex: {
     flexGrow: 1,

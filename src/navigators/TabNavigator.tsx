@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderTopColor: 'transparent',
     marginBottom:10,
-    marginHorizontal:57
+    marginHorizontal:47
   }
 });
 

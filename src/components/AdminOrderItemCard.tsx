@@ -62,7 +62,7 @@ const AdminOrderItemCard: React.FC<AdminOrderItemCardProps> = ({
         <LinearGradient
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
-          colors={[COLORS.primaryGreyHex, COLORS.primaryBlackHex]}
+          colors={[COLORS.primaryWhiteHex, COLORS.primaryWhiteHex]}
           style={styles.CardLinearGradient}>
           <View style={styles.CardInfoContainer}>
             <View style={styles.CardImageInfoContainer}>
@@ -89,20 +89,17 @@ const AdminOrderItemCard: React.FC<AdminOrderItemCardProps> = ({
                       onPress={() => {
                         buttonPressHandler(id);
                       }}>
-                      <BGIcon
-                        color={COLORS.primaryWhiteHex}
-                        name={'add'}
-                        BGColor={COLORS.primaryOrangeHex}
-                        size={FONTSIZE.size_10}
+                      <Image
+                        source={require('../assets/icons/checklist.png')}
+                        style={{
+                        height: 30,
+                        width: 30,
+                        }}
+                        resizeMode='contain'
                       />
                     </TouchableOpacity>
                   </View>
                 </View>
-                {/* <View style={styles.PriceBox}>
-                  <Text style={styles.PriceCurrency}>
-                    Rp.<Text style={styles.Price}> {price}</Text>
-                  </Text>
-                </View> */}
             </View>
             </View>
             <View>
@@ -118,6 +115,7 @@ const styles = StyleSheet.create({
     gap: SPACING.space_20,
     padding: SPACING.space_20,
     borderRadius: BORDERRADIUS.radius_25,
+    elevation:9
   },
   CardInfoContainer: {
     flexDirection: 'row',
@@ -136,8 +134,8 @@ const styles = StyleSheet.create({
   },
   CardTitle: {
     fontFamily: FONTFAMILY.poppins_medium,
-    fontSize: FONTSIZE.size_20,
-    color: COLORS.primaryWhiteHex,
+    fontSize: FONTSIZE.size_16,
+    color: COLORS.primaryBlackHex,
   },
   CardSubtitle: {
     fontFamily: FONTFAMILY.poppins_regular,
@@ -146,7 +144,7 @@ const styles = StyleSheet.create({
   },
   CardOrderDateSubtitle: {
     fontFamily: FONTFAMILY.poppins_regular,
-    fontSize: FONTSIZE.size_12,
+    fontSize: FONTSIZE.size_8,
     color: COLORS.secondaryLightGreyHex,
     paddingTop:24
   },
@@ -219,7 +217,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: FONTFAMILY.poppins_semibold,
     fontSize: FONTSIZE.size_16,
-    color: COLORS.primaryOrangeHex,
+    color: COLORS.primaryGreenHex,
   },
 });
 

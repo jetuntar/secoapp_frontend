@@ -44,8 +44,8 @@ const OrderItemCard: React.FC<OrderItemCardProps> = ({
   })}`;
 
   let formatted_name = name;
-  if (formatted_name.length > 8) {
-   formatted_name = `${formatted_name.substring(0, 8)}...`;
+  if (formatted_name.length > 7) {
+   formatted_name = `${formatted_name.substring(0, 7)}...`;
   }
 
   
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   CardTitle: {
     fontFamily: FONTFAMILY.poppins_medium,
-    fontSize: FONTSIZE.size_18,
+    fontSize: FONTSIZE.size_16,
     color: COLORS.primaryBlackHex,
   },
   CardSubtitle: {
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   CardOrderDateSubtitle: {
     fontFamily: FONTFAMILY.poppins_regular,
-    fontSize: FONTSIZE.size_12,
+    fontSize: FONTSIZE.size_10,
     color: COLORS.secondaryLightGreyHex,
     paddingTop:24
   },
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   CardReOrderText:{
     textAlign: 'center',
     fontFamily: FONTFAMILY.poppins_semibold,
-    fontSize: FONTSIZE.size_16,
+    fontSize: FONTSIZE.size_12,
     color: COLORS.primaryBlueHex,
   },
 });

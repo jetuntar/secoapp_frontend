@@ -77,19 +77,11 @@ const AdminPromoScreen = ({navigation}:any) => {
           ) : (
             <View style={styles.ListItemContainer}>
               {promoList.map(id => (
-                // <TouchableOpacity
-                //   // onPress={() => {
-                //   //   navigation.push('Details', {
-                //   //     itemId: itemId
-                //   //   });
-                //   // }}
-                //   key={itemId}>
                   <PromoImageBG
                     id={id.id}
                     imagelink={id.imagelink}
                     buttonHandler={() => deletePromo(id.id)}
                   />
-                // </TouchableOpacity>
               ))}
             </View>
           )}
@@ -104,7 +96,7 @@ export default AdminPromoScreen
 const styles = StyleSheet.create({
   ScreenContainer: {
     flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: COLORS.primarySilverHex,
   },
   ScrollViewFlex: {
     flexGrow: 1,

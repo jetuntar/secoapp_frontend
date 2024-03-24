@@ -42,8 +42,8 @@ const MealCard: React.FC<MealCardProps> = ({
   buttonPressHandler,
 }) => {
   let formatted_name = name;
-  if (formatted_name.length > 11) {
-    formatted_name = `${formatted_name.substring(0, 11)}...`;
+  if (formatted_name.length > 9) {
+    formatted_name = `${formatted_name.substring(0, 9)}...`;
   }
 
   return (

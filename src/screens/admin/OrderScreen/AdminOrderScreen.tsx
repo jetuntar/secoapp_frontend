@@ -121,7 +121,7 @@ export default AdminOrderScreen
 const styles = StyleSheet.create({
   ScreenContainer: {
     flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: COLORS.primarySilverHex,
   },
   LottieAnimation: {
     height: 250,
@@ -138,15 +138,7 @@ const styles = StyleSheet.create({
   },
   ListItemContainer: {
     paddingHorizontal: SPACING.space_20,
-    gap: SPACING.space_30,
-  },
-  DownloadButton: {
-    margin: SPACING.space_20,
-    backgroundColor: COLORS.primaryOrangeHex,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: SPACING.space_36 * 2,
-    borderRadius: BORDERRADIUS.radius_20,
+    gap: SPACING.space_10,
   },
   ButtonText: {
     fontFamily: FONTFAMILY.poppins_semibold,

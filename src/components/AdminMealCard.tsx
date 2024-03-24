@@ -41,8 +41,8 @@ const AdminMealCard: React.FC<MealCardProps> = ({
 }) => {
 
   let formatted_name = name;
-  if (formatted_name.length > 11) {
-   formatted_name = `${formatted_name.substring(0, 11)}...`;
+  if (formatted_name.length > 9) {
+   formatted_name = `${formatted_name.substring(0, 9)}...`;
   }
 
   return (
@@ -50,7 +50,7 @@ const AdminMealCard: React.FC<MealCardProps> = ({
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}
       style={styles.CardLinearGradientContainer}
-      colors={[COLORS.primaryGreyHex, COLORS.primaryBlackHex]}>
+      colors={[COLORS.primaryWhiteHex, COLORS.primaryWhiteHex]}>
       <ImageBackground
         source={{uri: imagelink_square}}
         style={styles.CardImageBG}
@@ -72,7 +72,8 @@ const styles = StyleSheet.create({
   CardLinearGradientContainer: {
     padding: SPACING.space_15,
     borderRadius: BORDERRADIUS.radius_25,
-    margin:10
+    margin:10,
+    elevation:5
   },
   CardImageBG: {
     width: CARD_WIDTH,
@@ -102,12 +103,12 @@ const styles = StyleSheet.create({
   },
   CardTitle: {
     fontFamily: FONTFAMILY.poppins_medium,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
     fontSize: FONTSIZE.size_16,
   },
   CardSubtitle: {
     fontFamily: FONTFAMILY.poppins_light,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
     fontSize: FONTSIZE.size_10,
   },
   CardFooterRow: {
@@ -118,11 +119,11 @@ const styles = StyleSheet.create({
   },
   CardPriceCurrency: {
     fontFamily: FONTFAMILY.poppins_semibold,
-    color: COLORS.primaryOrangeHex,
-    fontSize: FONTSIZE.size_18,
+    color: COLORS.primaryGreenHex,
+    fontSize: FONTSIZE.size_16,
   },
   CardPrice: {
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryGreenHex,
   },
 });
 

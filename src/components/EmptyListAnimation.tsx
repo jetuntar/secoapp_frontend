@@ -10,12 +10,6 @@ interface EmptyListAnimationProps {
 const EmptyListAnimation: React.FC<EmptyListAnimationProps> = ({title}) => {
   return (
     <View style={styles.EmptyCartContainer}>
-      <LottieView
-        style={styles.LottieStyle}
-        source={require('../lottie/coffeecup.json')}
-        autoPlay
-        loop
-      />
       <Text style={styles.LottieText}>{title}</Text>
     </View>
   );

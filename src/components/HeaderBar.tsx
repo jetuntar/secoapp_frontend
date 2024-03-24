@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, BackHandler, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation from @react-navigation/native
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme';
@@ -16,8 +16,7 @@ const HeaderBar = () => {
       // Clear the token from AsyncStorage
       await AsyncStorage.multiRemove(['userId', 'token'])
 
-      // navigation.navigate('Login')
-      Alert.alert('Ini harusnya logout, tapi belum jadi')
+      BackHandler.exitApp();
     } catch (error) {
       console.error('Logout failed', error);
       // Optionally, display an alert or handle the error in another way
@@ -26,12 +25,18 @@ const HeaderBar = () => {
 
   return (
     <View style={styles.HeaderContainer}>
-      <GradientBGIconVector
+      <TouchableOpacity
         onPress={handleLogout}
-        nameVector="logout"
-        colorVector={COLORS.primaryLightGreyHex}
-        sizeVector={FONTSIZE.size_16}
-      />
+      >
+      <Image
+          source={require('../assets/icons/logout.png')}
+          style={{
+          height: 25,
+          width: 25,
+          }}
+          resizeMode='contain'
+        />
+      </TouchableOpacity>
     </View>
   );
 };

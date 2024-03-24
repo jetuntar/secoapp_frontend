@@ -56,8 +56,8 @@ const CartItem: React.FC<CartItemProps> = ({
   }, [id]);
 
   const formattedName =
-    mealItem && mealItem.name.length > 11
-      ? `${mealItem.name.substring(0, 11)}...`
+    mealItem && mealItem.name.length > 9
+      ? `${mealItem.name.substring(0, 9)}...`
       : mealItem?.name;
 
   return (
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   CartItemInfo: {
     height:90,
-    width:130,
+    width:120,
     gap:4,
     flexDirection:'row',
     paddingVertical: SPACING.space_4,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   },
   CartItemSubtitle: {
     fontFamily: FONTFAMILY.poppins_regular,
-    fontSize: FONTSIZE.size_12,
+    fontSize: FONTSIZE.size_10,
     color: COLORS.primaryDarkWhiteHex,
   },
   CartItemRoastedContainer: {
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   },
   SizeCurrency: {
     fontFamily: FONTFAMILY.poppins_semibold,
-    fontSize: FONTSIZE.size_18,
+    fontSize: FONTSIZE.size_14,
     color: COLORS.primaryOrangeHex,
   },
   SizePrice: {
@@ -209,13 +209,12 @@ const styles = StyleSheet.create({
   },
   CartItemQuantityContainer: {
     backgroundColor: COLORS.primaryWhiteHex,
-    width: 40,
+    width: 30,
     height:30,
     borderRadius: BORDERRADIUS.radius_10,
     borderWidth: 2,
     borderColor: COLORS.secondaryGreenHex,
     alignItems: 'center',
-    paddingVertical: SPACING.space_2,
   },
   CartItemQuantityText: {
     fontFamily: FONTFAMILY.poppins_semibold,
@@ -252,7 +251,7 @@ const styles = StyleSheet.create({
   CartQuantityContainer:{
     alignItems:'center',
     flexDirection:'row',
-    gap:4
+    gap:3
   },
   InfoText:{
     justifyContent:'space-evenly',
